@@ -1,128 +1,115 @@
-#
-# .zshrc
-#
-# @author Jeff Geerling
-#
+source "$HOME/.user"
 
-# Colors.
-unset LSCOLORS
-export CLICOLOR=1
-export CLICOLOR_FORCE=1
+export PATH=$HOME/.bin:/usr/local/bin:$HOME/.dotnet:$PATH:$HOME/box-setup/bin:
+export PATH="/opt/homebrew/opt/gnu-sed/libexec/gnubin:$PATH"
 
-# Don't require escaping globbing characters in zsh.
-unsetopt nomatch
+export ZSH="$HOME/.oh-my-zsh"
 
-# Nicer prompt.
-export PS1=$'\n'"%F{green} %*%F %3~ %F{white}"$'\n'"$ "
+export LANG=en_US.UTF-8
 
-# Enable plugins.
-plugins=(git brew history kubectl history-substring-search)
+POWERLEVEL9K_MODE='nerdfont-complete'
+ZSH_THEME="powerlevel10k/powerlevel10k"
 
-# Custom $PATH with extra locations.
-export PATH=$HOME/Library/Python/3.9/bin:/opt/homebrew/bin:/usr/local/bin:/usr/local/sbin:$HOME/bin:$HOME/go/bin:$HOME/.cargo/bin:/usr/local/git/bin:$HOME/.composer/vendor/bin:$PATH
+plugins=(
+  git
+  jsontools
+  macos
+  pod
+  sudo
+  textmate
+  web-search
+  z
+  kubectl
+)
 
-# Bash-style time output.
-export TIMEFMT=$'\nreal\t%*E\nuser\t%*U\nsys\t%*S'
+source $ZSH/oh-my-zsh.sh
 
-# Include alias file (if present) containing aliases for ssh, etc.
-if [ -f ~/.aliases ]
-then
-  source ~/.aliases
-fi
+alias reload='source ~/.zshrc'
 
-# Set architecture-specific brew share path.
-arch_name="$(uname -m)"
-if [ "${arch_name}" = "x86_64" ]; then
-    share_path="/usr/local/share"
-elif [ "${arch_name}" = "arm64" ]; then
-    share_path="/opt/homebrew/share"
-else
-    echo "Unknown architecture: ${arch_name}"
-fi
+export LS_CMD="gls --color=auto"
+alias ls="$LS_CMD"
+alias ll="$LS_CMD -alh"
+alias la="$LS_CMD -A"
+alias l="$LS_CMD -lahrtc"
 
-# Allow history search via up/down keys.
-source ${share_path}/zsh-history-substring-search/zsh-history-substring-search.zsh
-bindkey "^[[A" history-substring-search-up
-bindkey "^[[B" history-substring-search-down
+alias gs="git status"
+alias gst="git status"
+alias gadd="git add -A && git status -sb"
+alias update_submodules="git pull --recurse-submodules && git submodule update"
+alias gp="git push origin HEAD -u"
+alias gb="git co -b"
+alias gd="git diff"
+alias gk="gitk 2> /dev/null"
+alias gcm="git commit -m"
+alias grh_git_reset_hard="git reset --hard"
+alias pull="git pull"
+alias gpr_git_pull_rebase="git pull --rebase"
+alias push="git push"
 
-# Git aliases.
-alias gs='git status'
-alias gc='git commit'
-alias gp='git pull --rebase'
-alias gcam='git commit -am'
-alias gl='git log --graph --pretty=format:"%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset" --abbrev-commit'
+# Syntax highlighting for less (-R for RAW ^ colors)
+alias less='less -R'
 
-# Completions.
-autoload -Uz compinit && compinit
-# Case insensitive.
-zstyle ':completion:*' matcher-list 'm:{[:lower:][:upper:]}={[:upper:][:lower:]}' 'm:{[:lower:][:upper:]}={[:upper:][:lower:]} l:|=* r:|=*' 'm:{[:lower:][:upper:]}={[:upper:][:lower:]} l:|=* r:|=*' 'm:{[:lower:][:upper:]}={[:upper:][:lower:]} l:|=* r:|=*'
+alias path='echo $PATH'
 
-# Git upstream branch syncer.
-# Usage: gsync master (checks out master, pull upstream, push origin).
-function gsync() {
- if [[ ! "$1" ]] ; then
-     echo "You must supply a branch."
-     return 0
- fi
+# Interactive delete
+alias rm='rm -i'
 
- BRANCHES=$(git branch --list $1)
- if [ ! "$BRANCHES" ] ; then
-    echo "Branch $1 does not exist."
-    return 0
- fi
+# Verbosely show progress for move and copy
+alias cp='cp -v'
+alias mv='mv -v'
 
- git checkout "$1" && \
- git pull upstream "$1" && \
- git push origin "$1"
+cleandd() {
+  rm -rf ~/Library/Developer/Xcode/DerivedData
+  echo "Removed all derived data."
 }
 
-# Tell homebrew to not autoupdate every single time I run it (just once a week).
-export HOMEBREW_AUTO_UPDATE_SECS=604800
+alias cleardd=cleandd
 
-# Super useful Docker container oneshots.
-# Usage: dockrun, or dockrun [centos7|fedora27|debian9|debian8|ubuntu1404|etc.]
-# Run on arm64 if getting errors: `export DOCKER_DEFAULT_PLATFORM=linux/amd64`
-dockrun() {
- docker run -it geerlingguy/docker-"${1:-ubuntu1604}"-ansible /bin/bash
+function openws {
+  for f in ./*.xcworkspace; do
+    open "${f}"
+    break;
+  done
 }
 
-# Enter a running Docker container.
-function denter() {
- if [[ ! "$1" ]] ; then
-     echo "You must supply a container ID or name."
-     return 0
- fi
-
- docker exec -it $1 bash
- return 0
+function stree {
+	if [ ! -d ./.git ]; then
+		echo "To use this command, go to the root directory where the .git directory exists."
+	else
+	    open -a SourceTree .
+	fi
 }
 
-# Delete a given line number in the known_hosts file.
-knownrm() {
- re='^[0-9]+$'
- if ! [[ $1 =~ $re ]] ; then
-   echo "error: line number missing" >&2;
- else
-   sed -i '' "$1d" ~/.ssh/known_hosts
- fi
+# Generate UUID and copy to clipboard
+alias uuid="uuidgen | tr -d '\n' | tr '[:upper:]' '[:lower:]'  | pbcopy && pbpaste && echo"
+
+card_number() {
+  filepath="$HOME/.CARD_NUMBER"
+  if [ -f $filepath ]
+  then
+      cat $filepath
+  fi
 }
 
-# Allow Composer to use almost as much RAM as Chrome.
-export COMPOSER_MEMORY_LIMIT=-1
+#customize powerlevel
+POWERLEVEL9K_DISABLE_RPROMPT=true
+POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(custom_git_pair custom_card_number context dir vcs)
+POWERLEVEL9K_CUSTOM_GIT_PAIR="git config --get user.initials"
+#POWERLEVEL9K_CUSTOM_GIT_PAIR_BACKGROUND="blue"
+#POWERLEVEL9K_CUSTOM_GIT_PAIR_FOREGROUND="yellow"
+POWERLEVEL9K_CUSTOM_CARD_NUMBER="card_number"
+POWERLEVEL9K_CUSTOM_CARD_NUMBER_BACKGROUND="grey"
+POWERLEVEL9K_CUSTOM_CARD_NUMBER_FOREGROUND="040"
 
-# Ask for confirmation when 'prod' is in a command string.
-#prod_command_trap () {
-#  if [[ $BASH_COMMAND == *prod* ]]
-#  then
-#    read -p "Are you sure you want to run this command on prod [Y/n]? " -n 1 -r
-#    if [[ $REPLY =~ ^[Yy]$ ]]
-#    then
-#      echo -e "\nRunning command \"$BASH_COMMAND\" \n"
-#    else
-#      echo -e "\nCommand was not run.\n"
-#      return 1
-#    fi
-#  fi
-#}
-#shopt -s extdebug
-#trap prod_command_trap DEBUG
+export NVM_DIR="$HOME/.nvm"
+[ -s "$(brew --prefix)/opt/nvm/nvm.sh" ] && . "$(brew --prefix)/opt/nvm/nvm.sh" # This loads nvm
+[ -s "$(brew --prefix)/opt/nvm/etc/bash_completion.d/nvm" ] && . "$(brew --prefix)/opt/nvm/etc/bash_completion.d/nvm" # This loads nvm bash_completion
+
+alias tf="terraform"
+
+test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
+
+export PATH="$PATH:/Users/andrew/.dotnet/tools"
+export PATH="/usr/local/opt/libpq/bin:$PATH"
+
+alias rider="/Users/andrew/box-setup/bin/rider"
