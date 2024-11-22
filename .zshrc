@@ -1,7 +1,6 @@
-source "$HOME/.user"
-
-export PATH=$HOME/.bin:/usr/local/bin:$HOME/.dotnet:$PATH:$HOME/box-setup/bin:
-export PATH="/opt/homebrew/opt/gnu-sed/libexec/gnubin:$PATH"
+export PATH=$HOME/Library/Python/3.9/bin:/opt/homebrew/bin:/usr/local/bin:/usr/local/sbin:$HOME/bin:$HOME/go/bin:/opt/homebrew/bin/git:$PATH
+export PATH=$HOME/.bin:/usr/local/bin:$HOME/.dotnet:$HOME/.dotnet/tools:$HOME/workspace/mac-dev-playbook/bin:$PATH
+export PATH=/opt/homebrew/opt/gnu-sed/libexec/gnubin:/usr/local/opt/libpq/bin:$PATH
 
 export ZSH="$HOME/.oh-my-zsh"
 
@@ -58,6 +57,8 @@ alias rm='rm -i'
 alias cp='cp -v'
 alias mv='mv -v'
 
+alias tf="terraform"
+
 cleandd() {
   rm -rf ~/Library/Developer/Xcode/DerivedData
   echo "Removed all derived data."
@@ -65,31 +66,10 @@ cleandd() {
 
 alias cleardd=cleandd
 
-function openws {
-  for f in ./*.xcworkspace; do
-    open "${f}"
-    break;
-  done
-}
-
-function stree {
-	if [ ! -d ./.git ]; then
-		echo "To use this command, go to the root directory where the .git directory exists."
-	else
-	    open -a SourceTree .
-	fi
-}
-
 # Generate UUID and copy to clipboard
 alias uuid="uuidgen | tr -d '\n' | tr '[:upper:]' '[:lower:]'  | pbcopy && pbpaste && echo"
 
-card_number() {
-  filepath="$HOME/.CARD_NUMBER"
-  if [ -f $filepath ]
-  then
-      cat $filepath
-  fi
-}
+alias rider="$HOME/workspace/mac-dev-playbook/bin/rider"
 
 #customize powerlevel
 POWERLEVEL9K_DISABLE_RPROMPT=true
@@ -105,11 +85,4 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$(brew --prefix)/opt/nvm/nvm.sh" ] && . "$(brew --prefix)/opt/nvm/nvm.sh" # This loads nvm
 [ -s "$(brew --prefix)/opt/nvm/etc/bash_completion.d/nvm" ] && . "$(brew --prefix)/opt/nvm/etc/bash_completion.d/nvm" # This loads nvm bash_completion
 
-alias tf="terraform"
-
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
-
-export PATH="$PATH:/Users/andrew/.dotnet/tools"
-export PATH="/usr/local/opt/libpq/bin:$PATH"
-
-alias rider="/Users/andrew/box-setup/bin/rider"
