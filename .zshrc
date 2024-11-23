@@ -1,14 +1,13 @@
 export PATH=$HOME/Library/Python/3.9/bin:/opt/homebrew/bin:/usr/local/bin:/usr/local/sbin:$HOME/bin:$HOME/go/bin:/opt/homebrew/bin/git:$PATH
 export PATH=$HOME/.bin:/usr/local/bin:$HOME/.dotnet:$HOME/.dotnet/tools:$HOME/workspace/mac-dev-playbook/bin:$PATH
 export PATH=/opt/homebrew/opt/gnu-sed/libexec/gnubin:/usr/local/opt/libpq/bin:$PATH
-export PATH=/Applications/Visual Studio Code.app/Contents/Resources/app/bin:$PATH
+export PATH="/Applications/Visual Studio Code.app/Contents/Resources/app/bin":$PATH
 
 export ZSH="$HOME/.oh-my-zsh"
 
 export LANG=en_US.UTF-8
 
-POWERLEVEL9K_MODE='nerdfont-complete'
-ZSH_THEME="powerlevel10k/powerlevel10k"
+POWERLEVEL10K_MODE='nerdfont-complete'
 
 plugins=(
   git
@@ -23,6 +22,8 @@ plugins=(
 )
 
 source $ZSH/oh-my-zsh.sh
+
+source $(brew --prefix)/share/powerlevel10k/powerlevel10k.zsh-theme
 
 alias reload='source ~/.zshrc'
 
@@ -71,16 +72,6 @@ alias cleardd=cleandd
 alias uuid="uuidgen | tr -d '\n' | tr '[:upper:]' '[:lower:]'  | pbcopy && pbpaste && echo"
 
 alias rider="$HOME/workspace/mac-dev-playbook/bin/rider"
-
-#customize powerlevel
-POWERLEVEL9K_DISABLE_RPROMPT=true
-POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(custom_git_pair custom_card_number context dir vcs)
-POWERLEVEL9K_CUSTOM_GIT_PAIR="git config --get user.initials"
-#POWERLEVEL9K_CUSTOM_GIT_PAIR_BACKGROUND="blue"
-#POWERLEVEL9K_CUSTOM_GIT_PAIR_FOREGROUND="yellow"
-POWERLEVEL9K_CUSTOM_CARD_NUMBER="card_number"
-POWERLEVEL9K_CUSTOM_CARD_NUMBER_BACKGROUND="grey"
-POWERLEVEL9K_CUSTOM_CARD_NUMBER_FOREGROUND="040"
 
 export NVM_DIR="$HOME/.nvm"
 [ -s "$(brew --prefix)/opt/nvm/nvm.sh" ] && . "$(brew --prefix)/opt/nvm/nvm.sh" # This loads nvm

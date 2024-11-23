@@ -167,10 +167,12 @@ chflags nohidden ~/Library
 ###############################################################################
 
 # Set the icon size of Dock items
-defaults write com.apple.dock tilesize -int 30
+defaults write com.apple.dock tilesize -int 60
 
 # Speed up Mission Control animations
 defaults write com.apple.dock expose-animation-duration -float 0.15
+
+defaults write com.apple.dock "autohide" -bool "true"
 
 # Make Dock icons of hidden applications translucent
 defaults write com.apple.dock showhidden -bool true
@@ -259,6 +261,16 @@ defaults write com.apple.messageshelper.MessageController SOInputLineSettings -d
 
 # Disable in-app rating requests from apps downloaded from the App Store.
 defaults write com.apple.appstore InAppReviewEnabled -int 0
+
+###############################################################################
+# iterm2                                                                   #
+###############################################################################
+
+# Specify the preferences directory
+defaults write com.googlecode.iterm2.plist PrefsCustomFolder -string "~/workspace/dotfiles/iterm2"
+
+# Tell iTerm2 to use the custom preferences in the directory
+defaults write com.googlecode.iterm2.plist LoadPrefsFromCustomFolder -bool true
 
 ###############################################################################
 # Kill/restart affected applications                                          #
