@@ -27,6 +27,9 @@ source $(brew --prefix)/share/powerlevel10k/powerlevel10k.zsh-theme
 
 alias reload='source ~/.zshrc'
 
+# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
 export LS_CMD="gls --color=auto"
 alias ls="$LS_CMD"
 alias ll="$LS_CMD -alh"
