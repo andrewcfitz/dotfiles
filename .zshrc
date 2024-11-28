@@ -74,7 +74,8 @@ alias cleardd=cleandd
 # Generate UUID and copy to clipboard
 alias uuid="uuidgen | tr -d '\n' | tr '[:upper:]' '[:lower:]'  | pbcopy && pbpaste && echo"
 
-alias rider="$HOME/workspace/mac-dev-playbook/bin/rider"
+alias rider="$HOME/workspace/mac-dev-playbook/bin/rider.sh"
+alias kubecfg1p="$HOME/workspace/mac-dev-playbook/bin/set-kubeconfig-from-1password.sh"
 
 export NVM_DIR="$HOME/.nvm"
 [ -s "$(brew --prefix)/opt/nvm/nvm.sh" ] && . "$(brew --prefix)/opt/nvm/nvm.sh" # This loads nvm
