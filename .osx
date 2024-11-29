@@ -263,7 +263,7 @@ defaults write com.apple.messageshelper.MessageController SOInputLineSettings -d
 defaults write com.apple.appstore InAppReviewEnabled -int 0
 
 ###############################################################################
-# iterm2                                                                   #
+# iterm2                                                                      #
 ###############################################################################
 
 # Specify the preferences directory
@@ -271,6 +271,12 @@ defaults write com.apple.appstore InAppReviewEnabled -int 0
 
 # Tell iTerm2 to use the custom preferences in the directory
 #defaults write com.googlecode.iterm2.plist LoadPrefsFromCustomFolder -bool true
+
+###############################################################################
+# spaces                                                                      #
+###############################################################################
+
+defaults write com.apple.dock "mru-spaces" -bool "false"
 
 ###############################################################################
 # Kill/restart affected applications                                          #
