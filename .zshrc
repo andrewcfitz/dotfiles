@@ -10,6 +10,9 @@ export PATH=$HOME/.bin:/usr/local/bin:$HOME/.dotnet:$HOME/.dotnet/tools:$HOME/wo
 export PATH=/opt/homebrew/opt/gnu-sed/libexec/gnubin:/usr/local/opt/libpq/bin:$PATH
 export PATH="/Applications/Visual Studio Code.app/Contents/Resources/app/bin":$PATH
 
+bindkey "^[[1;3C" forward-word
+bindkey "^[[1;3D" backward-word
+
 export ZSH="$HOME/.oh-my-zsh"
 
 export LANG=en_US.UTF-8
