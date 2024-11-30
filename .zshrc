@@ -109,6 +109,10 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$(brew --prefix)/opt/nvm/etc/bash_completion.d/nvm" ] && . "$(brew --prefix)/opt/nvm/etc/bash_completion.d/nvm" # This loads nvm bash_completion
 
 source $(brew --prefix)/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+source $(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+
+# Tab partial completion
+bindkey '^I' forward-word
 
 alias copilot="gh copilot"
 alias gcs="gh copilot suggest --shell-out=/bin/sh"
