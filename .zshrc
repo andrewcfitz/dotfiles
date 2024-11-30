@@ -87,6 +87,14 @@ alias uuid="uuidgen | tr -d '\n' | tr '[:upper:]' '[:lower:]'  | pbcopy && pbpas
 alias rider="$HOME/workspace/mac-dev-playbook/bin/rider.sh"
 alias kubecfg1p="$HOME/workspace/mac-dev-playbook/bin/set-kubeconfig-from-1password.sh"
 
+alias stop='./scripts/stop.sh'
+alias start='./scripts/start.sh'
+alias build='./scripts/build.sh'
+alias nuke='./scripts/nuke.sh'
+
+alias rvcl='clear && cd ~/workspace/rvchecklist'
+alias louie='clear && cd ~/workspace/louie-camp'
+
 export NVM_DIR="$HOME/.nvm"
 [ -s "$(brew --prefix)/opt/nvm/nvm.sh" ] && . "$(brew --prefix)/opt/nvm/nvm.sh" # This loads nvm
 [ -s "$(brew --prefix)/opt/nvm/etc/bash_completion.d/nvm" ] && . "$(brew --prefix)/opt/nvm/etc/bash_completion.d/nvm" # This loads nvm bash_completion
