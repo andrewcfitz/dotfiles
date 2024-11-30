@@ -17,6 +17,8 @@
   email = andrew@fitz.biz
 [core]
   excludesfile = /Users/andrew/.gitignore
+  eof = lf
+  autocrlf = input
 [filter "lfs"]
   required = true
   clean = git-lfs clean -- %f
@@ -24,3 +26,5 @@
   process = git-lfs filter-process
 [init]
   defaultBranch = main
+[alias]
+    co = checkout

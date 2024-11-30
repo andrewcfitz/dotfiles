@@ -92,16 +92,24 @@ alias start='./scripts/start.sh'
 alias build='./scripts/build.sh'
 alias nuke='./scripts/nuke.sh'
 
-alias rvcl='clear && cd ~/workspace/rvchecklist'
-alias louie='clear && cd ~/workspace/louie-camp'
+function ShowTitle() {
+  local title=$1
+  local folder=$2
+  clear 
+  figlet -w 1000 -f starwars "$title" | lolcat -S 120 
+}
+
+alias rvcl='ShowTitle "RVChecklist" && cd ~/workspace/rvchecklist'
+alias louie='ShowTitle "Louie.Camp" && cd ~/workspace/louie-camp'
+alias df='ShowTitle "dotfiles" && cd ~/workspace/dotfiles'
+alias mdp='ShowTitle "mac-dev-playbook" && cd ~/workspace/mac-dev-playbook'
 
 export NVM_DIR="$HOME/.nvm"
 [ -s "$(brew --prefix)/opt/nvm/nvm.sh" ] && . "$(brew --prefix)/opt/nvm/nvm.sh" # This loads nvm
 [ -s "$(brew --prefix)/opt/nvm/etc/bash_completion.d/nvm" ] && . "$(brew --prefix)/opt/nvm/etc/bash_completion.d/nvm" # This loads nvm bash_completion
 
-test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
-
-ZSH_AUTOSUGGEST_CLEAR_WIDGETS+=(bracketed-paste up-line-or-search down-line-or-search expand-or-complete accept-line push-line-or-edit)
-
-source $(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 source $(brew --prefix)/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+
+alias copilot="gh copilot"
+alias gcs="gh copilot suggest --shell-out=/bin/sh"
+alias gce="gh copilot explain"
