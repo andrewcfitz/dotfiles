@@ -9,6 +9,7 @@ export PATH=$HOME/Library/Python/3.9/bin:/opt/homebrew/bin:/usr/local/bin:/usr/l
 export PATH=$HOME/.bin:/usr/local/bin:$HOME/.dotnet:$HOME/.dotnet/tools:$HOME/workspace/mac-dev-playbook/bin:$PATH
 export PATH=/opt/homebrew/opt/gnu-sed/libexec/gnubin:/usr/local/opt/libpq/bin:$PATH
 export PATH="/Applications/Visual Studio Code.app/Contents/Resources/app/bin":$PATH
+export PATH="/Users/andrew/Library/Application Support/JetBrains/Toolbox/scripts:$PATH"
 
 bindkey "^[[1;3C" forward-word
 bindkey "^[[1;3D" backward-word
@@ -103,6 +104,7 @@ alias rvcl='ShowTitle "RVChecklist" && cd ~/workspace/rvchecklist'
 alias louie='ShowTitle "Louie.Camp" && cd ~/workspace/louie-camp'
 alias df='ShowTitle "dotfiles" && cd ~/workspace/dotfiles'
 alias mdp='ShowTitle "mac-dev-playbook" && cd ~/workspace/mac-dev-playbook'
+alias ws='ShowTitle "workspace" && cd ~/workspace'
 
 export NVM_DIR="$HOME/.nvm"
 [ -s "$(brew --prefix)/opt/nvm/nvm.sh" ] && . "$(brew --prefix)/opt/nvm/nvm.sh" # This loads nvm
@@ -111,9 +113,13 @@ export NVM_DIR="$HOME/.nvm"
 source $(brew --prefix)/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 source $(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 
-# Tab partial completion
+ZSH_AUTOSUGGEST_HISTORY_IGNORE="(cd *|curl *|wget *)"
+ZSH_AUTOSUGGEST_STRATEGY=(history completion)
+
 bindkey '^I' forward-word
 
 alias copilot="gh copilot"
 alias gcs="gh copilot suggest --shell-out=/bin/sh"
 alias gce="gh copilot explain"
+
+eval "$(rbenv init - --no-rehash zsh)"

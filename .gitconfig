@@ -13,7 +13,7 @@
 [push]
   default = simple
 [user]
-  name = Andrew Fitzpatrick
+  name = andrewcfitz
   email = andrew@fitz.biz
 [core]
   excludesfile = /Users/andrew/.gitignore
@@ -27,4 +27,4 @@
 [init]
   defaultBranch = main
 [alias]
-    co = checkout
+  co = checkout
