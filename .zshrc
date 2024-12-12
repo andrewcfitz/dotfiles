@@ -11,6 +11,8 @@ export PATH=/opt/homebrew/opt/gnu-sed/libexec/gnubin:/usr/local/opt/libpq/bin:$P
 export PATH="/Applications/Visual Studio Code.app/Contents/Resources/app/bin":$PATH
 export PATH="/Users/andrew/Library/Application Support/JetBrains/Toolbox/scripts:$PATH"
 
+export DOCKER_HOST=unix://$(podman machine inspect --format '{{.ConnectionInfo.PodmanSocket.Path}}')
+
 bindkey "^[[1;3C" forward-word
 bindkey "^[[1;3D" backward-word
 
@@ -85,6 +87,8 @@ alias cleardd=cleandd
 # Generate UUID and copy to clipboard
 alias uuid="uuidgen | tr -d '\n' | tr '[:upper:]' '[:lower:]'  | pbcopy && pbpaste && echo"
 
+alias flushdns="sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder"
+
 alias rider="$HOME/workspace/mac-dev-playbook/bin/rider.sh"
 alias kubecfg1p="$HOME/workspace/mac-dev-playbook/bin/set-kubeconfig-from-1password.sh"
 
@@ -92,6 +96,7 @@ alias stop='./scripts/stop.sh'
 alias start='./scripts/start.sh'
 alias build='./scripts/build.sh'
 alias nuke='./scripts/nuke.sh'
+alias preload='./scripts/preload-data.sh'
 
 function ShowTitle() {
   local title=$1
@@ -114,7 +119,7 @@ source $(brew --prefix)/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zs
 source $(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 
 ZSH_AUTOSUGGEST_HISTORY_IGNORE="(cd *|curl *|wget *)"
-ZSH_AUTOSUGGEST_STRATEGY=(history completion)
+ZSH_AUTOSUGGEST_STRATEGY=(completion history)
 
 bindkey '^I' forward-word
 
