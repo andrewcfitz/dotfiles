@@ -1,4 +1,4 @@
 {
     "security.workspace.trust.untrustedFiles": "open",
-    "files.autoSave": "onFocusChange"
+    "files.autoSave": "afterDelay"
 }
