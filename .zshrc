@@ -16,8 +16,6 @@ export PATH="/Applications/Visual Studio Code.app/Contents/Resources/app/bin:$PA
 export PATH="$HOME/Library/Application Support/JetBrains/Toolbox/scripts:$PATH"
 export PATH=$HOME/workspace/dotfiles/bin:$PATH
 
-export DOCKER_HOST=unix://$(podman machine inspect --format '{{.ConnectionInfo.PodmanSocket.Path}}')
-
 bindkey "^[[1;3C" forward-word
 bindkey "^[[1;3D" backward-word
 
@@ -127,5 +125,7 @@ bindkey '^I' forward-word
 alias copilot="gh copilot"
 alias gcs="gh copilot suggest --shell-out=/bin/sh"
 alias gce="gh copilot explain"
+
+alias docker-nas="docker -H ssh://andrew@truenas.fitzy.foo"
 
 eval "$(rbenv init - --no-rehash zsh)"

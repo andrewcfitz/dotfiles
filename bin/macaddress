@@ -1,0 +1,15 @@
+#!/bin/bash
+# Generate a random MAC address with locally administered and unicast bits set
+
+# The first octet: clear multicast bit (LSB) and set local admin bit (second LSB)
+first_octet=$(( (RANDOM % 256) & 0xFE | 0x02 ))
+
+# Generate the remaining five octets randomly
+octet2=$(( RANDOM % 256 ))
+octet3=$(( RANDOM % 256 ))
+octet4=$(( RANDOM % 256 ))
+octet5=$(( RANDOM % 256 ))
+octet6=$(( RANDOM % 256 ))
+
+# Format and print the MAC address
+printf '%02x:%02x:%02x:%02x:%02x:%02x' "$first_octet" "$octet2" "$octet3" "$octet4" "$octet5" "$octet6" | pbcopy && pbpaste && echo

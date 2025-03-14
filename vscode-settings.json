@@ -1,4 +1,6 @@
 {
     "security.workspace.trust.untrustedFiles": "open",
-    "files.autoSave": "afterDelay"
+    "files.autoSave": "afterDelay",
+    "editor.fontFamily": "Hack Nerd Font",
+    "git.autofetch": true
 }

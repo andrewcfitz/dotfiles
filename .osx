@@ -92,6 +92,8 @@ defaults write NSGlobalDomain ApplePressAndHoldEnabled -bool false
 # Disable auto-correct
 defaults write NSGlobalDomain NSAutomaticSpellingCorrectionEnabled -bool false
 
+defaults write NSGlobalDomain NSQuitAlwaysKeepsWindow -bool true
+
 ###############################################################################
 # Screen                                                                      #
 ###############################################################################
