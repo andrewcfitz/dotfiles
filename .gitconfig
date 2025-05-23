@@ -13,8 +13,8 @@
 [push]
   default = simple
 [user]
-  name = andrewcfitz
-  email = andrew@fitz.biz
+	name = andrewcfitz
+	email = andrew@fitz.biz
 [core]
   excludesfile = /Users/andrew/.gitignore
   eof = lf

@@ -14,6 +14,8 @@
 	<false/>
 	<key>Default Bookmark Guid</key>
 	<string>5966FC5E-DF10-4EB4-A899-2E72DCB299AE</string>
+	<key>DimOnlyText</key>
+	<true/>
 	<key>HapticFeedbackForEsc</key>
 	<false/>
 	<key>HideTab</key>
@@ -906,7 +908,7 @@
 			<key>Custom Command</key>
 			<string>No</string>
 			<key>Custom Directory</key>
-			<string>No</string>
+			<string>Recycle</string>
 			<key>Default Bookmark</key>
 			<string>No</string>
 			<key>Description</key>
@@ -975,20 +977,6 @@
 					<integer>11</integer>
 					<key>Text</key>
 					<string>0x15</string>
-				</dict>
-				<key>0x7f-0x80000</key>
-				<dict>
-					<key>Action</key>
-					<integer>11</integer>
-					<key>Text</key>
-					<string>"0x1b 0x7f"</string>
-				</dict>
-				<key>0xf702-0x280000</key>
-				<dict>
-					<key>Action</key>
-					<integer>10</integer>
-					<key>Text</key>
-					<string>b</string>
 				</dict>
 				<key>0xf702-0x300000</key>
 				<dict>
@@ -1076,7 +1064,7 @@
 			<key>Normal Font</key>
 			<string>HackNF-Regular 12</string>
 			<key>Option Key Sends</key>
-			<integer>0</integer>
+			<integer>2</integer>
 			<key>Prompt Before Closing 2</key>
 			<false/>
 			<key>Right Option Key Sends</key>
@@ -1240,6 +1228,8 @@
 	<true/>
 	<key>SoundForEsc</key>
 	<false/>
+	<key>SplitPaneDimmingAmount</key>
+	<real>0.23560270579268294</real>
 	<key>ToolbeltTools</key>
 	<array>
 		<string>Codecierge</string>

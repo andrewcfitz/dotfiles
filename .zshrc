@@ -129,3 +129,8 @@ alias gce="gh copilot explain"
 alias docker-nas="docker -H ssh://andrew@truenas.fitzy.foo"
 
 eval "$(rbenv init - --no-rehash zsh)"
+
+# Added by Windsurf
+export PATH="/Users/andrew/.codeium/windsurf/bin:$PATH"
+
+command -v flux >/dev/null && . <(flux completion zsh)
