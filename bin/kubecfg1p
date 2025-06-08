@@ -3,14 +3,40 @@
 # Exit on errors
 set -e
 
-# Check if the hostname parameter is provided
-if [ -z "$1" ]; then
-  echo "Usage: kubecfg1p <hostname>"
+# Function to show usage
+show_usage() {
+  echo "Usage:"
+  echo "  kubecfg1p <hostname>                - Fetch kubeconfig from 1Password and add to local kubeconfig"
+  echo "  kubecfg1p --add <file> <name>       - Add kubeconfig from file to 1Password and local kubeconfig"
   exit 1
+}
+
+# Check if any parameter is provided
+if [ -z "$1" ]; then
+  show_usage
 fi
 
-# Variables
-HOSTNAME="$1"
+# Mode selection
+if [ "$1" = "--add" ]; then
+  # ADD MODE
+  if [ -z "$2" ] || [ -z "$3" ]; then
+    echo "Error: --add mode requires both a file path and a name"
+    show_usage
+  fi
+  
+  CONFIG_FILE="$2"
+  HOSTNAME="$3"
+  
+  # Check if the file exists
+  if [ ! -f "$CONFIG_FILE" ]; then
+    echo "Error: Config file $CONFIG_FILE does not exist"
+    exit 1
+  fi
+else
+  # DEFAULT MODE (get from 1Password)
+  HOSTNAME="$1"
+fi
+
 CONTEXT=$(echo "$HOSTNAME" | awk -F. '{if(NF>2) {OFS="."; NF-=2; print} else {print $1}}')
 OP_ITEM_NAME="k3s config - ${HOSTNAME}"    # Construct the 1Password item name
 KUBE_CONFIG_FIELD="config"                 # The field name containing the kubeconfig value
@@ -30,17 +56,41 @@ if ! op whoami &> /dev/null; then
   eval $(op signin)
 fi
 
-# Fetch the kubeconfig value from 1Password
-echo "Fetching kubeconfig from 1Password item: $OP_ITEM_NAME, field: $KUBE_CONFIG_FIELD"
-KUBECONFIG_CONTENT=$(op item get "$OP_ITEM_NAME" --field "$KUBE_CONFIG_FIELD")
-
-# Remove surrounding quotes from the kubeconfig content, if any
-KUBECONFIG_CONTENT=$(echo "$KUBECONFIG_CONTENT" | sed 's/^"//;s/"$//')
-
-# Check if the kubeconfig value was fetched successfully
-if [ -z "$KUBECONFIG_CONTENT" ]; then
-  echo "Error: Could not retrieve kubeconfig from 1Password. Check item name and field."
-  exit 1
+# Process the kubeconfig based on mode
+if [ "$1" = "--add" ]; then
+  # ADD MODE: Read kubeconfig from file and add to 1Password
+  echo "Reading kubeconfig from file: $CONFIG_FILE"
+  KUBECONFIG_CONTENT=$(cat "$CONFIG_FILE")
+  
+  # Check if config was read successfully
+  if [ -z "$KUBECONFIG_CONTENT" ]; then
+    echo "Error: Failed to read kubeconfig from file."
+    exit 1
+  fi
+  
+  # Check if item already exists in 1Password
+  if op item get "$OP_ITEM_NAME" &>/dev/null; then
+    # Update existing item
+    echo "Updating existing 1Password item: $OP_ITEM_NAME"
+    op item edit "$OP_ITEM_NAME" "$KUBE_CONFIG_FIELD=$KUBECONFIG_CONTENT"
+  else
+    # Create new item
+    echo "Creating new 1Password item: $OP_ITEM_NAME"
+    op item create --category "Secure Note" --title "$OP_ITEM_NAME" "$KUBE_CONFIG_FIELD=$KUBECONFIG_CONTENT"
+  fi
+else
+  # DEFAULT MODE: Fetch the kubeconfig value from 1Password
+  echo "Fetching kubeconfig from 1Password item: $OP_ITEM_NAME, field: $KUBE_CONFIG_FIELD"
+  KUBECONFIG_CONTENT=$(op item get "$OP_ITEM_NAME" --field "$KUBE_CONFIG_FIELD")
+  
+  # Remove surrounding quotes from the kubeconfig content, if any
+  KUBECONFIG_CONTENT=$(echo "$KUBECONFIG_CONTENT" | sed 's/^"//;s/"$//')
+  
+  # Check if the kubeconfig value was fetched successfully
+  if [ -z "$KUBECONFIG_CONTENT" ]; then
+    echo "Error: Could not retrieve kubeconfig from 1Password. Check item name and field."
+    exit 1
+  fi
 fi
 
 # Ensure the .kube directory exists

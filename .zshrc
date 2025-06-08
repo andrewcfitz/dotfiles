@@ -134,3 +134,4 @@ eval "$(rbenv init - --no-rehash zsh)"
 export PATH="/Users/andrew/.codeium/windsurf/bin:$PATH"
 
 command -v flux >/dev/null && . <(flux completion zsh)
+export PATH="/Applications/Xcode-16.4.0-Release.Candidate.app/Contents/Developer/usr/bin:$PATH"
