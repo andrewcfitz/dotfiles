@@ -6,8 +6,11 @@ set -e
 # Function to show usage
 show_usage() {
   echo "Usage:"
-  echo "  kubecfg1p <hostname>                - Fetch kubeconfig from 1Password and add to local kubeconfig"
-  echo "  kubecfg1p --add <file> <name>       - Add kubeconfig from file to 1Password and local kubeconfig"
+  echo "  kubecfg1p <hostname> [--item ITEM]     - Fetch kubeconfig from 1Password and add to local kubeconfig"
+  echo "  kubecfg1p --add <file> <name>           - Add kubeconfig from file to 1Password and local kubeconfig"
+  echo ""
+  echo "Options:"
+  echo "  --item ITEM                        - Override 1Password item name to 'k3s config - ITEM' (default uses hostname)"
   exit 1
 }
 
@@ -34,11 +37,33 @@ if [ "$1" = "--add" ]; then
   fi
 else
   # DEFAULT MODE (get from 1Password)
+  ITEM=""
   HOSTNAME="$1"
+  
+  # Parse any additional options
+  shift
+  while [[ $# -gt 0 ]]; do
+    case $1 in
+      --item)
+        ITEM="$2"
+        shift 2
+        ;;
+      *)
+        echo "Error: Unknown option $1"
+        show_usage
+        ;;
+    esac
+  done
 fi
 
 CONTEXT=$(echo "$HOSTNAME" | awk -F. '{if(NF>2) {OFS="."; NF-=2; print} else {print $1}}')
-OP_ITEM_NAME="k3s config - ${HOSTNAME}"    # Construct the 1Password item name
+
+# Set the OP_ITEM_NAME based on whether --item was provided
+if [ -n "$ITEM" ]; then
+  OP_ITEM_NAME="k3s config - ${ITEM}"
+else
+  OP_ITEM_NAME="k3s config - ${HOSTNAME}"    # Construct the 1Password item name using hostname
+fi
 KUBE_CONFIG_FIELD="config"                 # The field name containing the kubeconfig value
 KUBE_CONFIG_DIR="$HOME/.kube"              # Directory to save the kubeconfig file
 KUBE_CONFIG_PATH="$KUBE_CONFIG_DIR/config" # Full path to the kubeconfig file
