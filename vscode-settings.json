@@ -1,6 +1,12 @@
 {
-    "security.workspace.trust.untrustedFiles": "open",
-    "files.autoSave": "afterDelay",
-    "editor.fontFamily": "Hack Nerd Font",
-    "git.autofetch": true
+  "editor.accessibilitySupport": "off",
+  "editor.fontFamily": "Hack Nerd Font",
+  "files.autoSave": "afterDelay",
+  "git.autofetch": true,
+  "git.confirmSync": false,
+  "git.enableSmartCommit": true,
+  "security.workspace.trust.untrustedFiles": "open",
+  "terminal.integrated.env.osx": {
+    "Q_NEW_SESSION": "1"
+  }
 }
