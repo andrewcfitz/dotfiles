@@ -51,6 +51,12 @@ ln -sf $HOME/workspace/dotfiles/.zshrc ~/.zshrc
 ln -sf $HOME/workspace/dotfiles/.gitconfig ~/.gitconfig
 ln -sf $HOME/workspace/dotfiles/.p10k.zsh ~/.p10k.zsh
 
-curl -fsSL https://claude.ai/install.sh | bash
+# Install Claude CLI (if not already installed)
+if ! command -v claude &> /dev/null; then
+  echo "Installing Claude CLI..."
+  curl -fsSL https://claude.ai/install.sh | bash
+else
+  echo "Claude CLI already installed, skipping..."
+fi
 
 echo "Setup complete!"
