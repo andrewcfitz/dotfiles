@@ -7,14 +7,28 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
+# Detect OS and set MODE variable
+if [[ "$OSTYPE" == "darwin"* ]]; then
+  export MODE="MACOS"
+elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
+  export MODE="UBUNTU"
+else
+  export MODE="UNKNOWN"
+fi
+
 export SSH_AUTH_SOCK=~/Library/Group\ Containers/2BUA8C4S2C.com.1password/t/agent.sock
 
-export PATH=/opt/local/bin:/opt/local/sbin:$PATH
-export PATH=$HOME/Library/Python/3.9/bin:/opt/homebrew/bin:/usr/local/bin:/usr/local/sbin:$HOME/bin:$HOME/go/bin:/opt/homebrew/bin/git:$PATH
-export PATH=$HOME/.bin:/usr/local/bin:$HOME/.dotnet:$HOME/.dotnet/tools:$HOME/workspace/mac-dev-playbook/bin:$PATH
-export PATH=/opt/homebrew/opt/gnu-sed/libexec/gnubin:/usr/local/opt/libpq/bin:$PATH
-export PATH="/Applications/Visual Studio Code.app/Contents/Resources/app/bin:$PATH"
-export PATH="$HOME/Library/Application Support/JetBrains/Toolbox/scripts:$PATH"
+if [[ "$OSTYPE" == "darwin"* ]]; then
+  export PATH=/opt/local/bin:/opt/local/sbin:$PATH
+  export PATH=$HOME/Library/Python/3.9/bin:/opt/homebrew/bin:/usr/local/bin:/usr/local/sbin:$HOME/bin:$HOME/go/bin:/opt/homebrew/bin/git:$PATH
+  export PATH=$HOME/.bin:/usr/local/bin:$HOME/.dotnet:$HOME/.dotnet/tools:$HOME/workspace/mac-dev-playbook/bin:$PATH
+  export PATH=/opt/homebrew/opt/gnu-sed/libexec/gnubin:/usr/local/opt/libpq/bin:$PATH
+  export PATH="/Applications/Visual Studio Code.app/Contents/Resources/app/bin:$PATH"
+  export PATH="$HOME/Library/Application Support/JetBrains/Toolbox/scripts:$PATH"
+  # Added by Windsurf
+export PATH="/Users/andrew/.codeium/windsurf/bin:$PATH"
+fi
+
 export PATH=$HOME/workspace/dotfiles/bin:$PATH
 
 bindkey "^[[1;3C" forward-word
@@ -47,7 +61,11 @@ alias reload='source ~/.zshrc'
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
-export LS_CMD="gls --color=auto"
+if [[ "$OSTYPE" == "darwin"* ]]; then
+  export LS_CMD="gls --color=auto"
+else
+  export LS_CMD="ls --color=auto"
+fi
 alias ls="$LS_CMD"
 alias ll="$LS_CMD -alh"
 alias la="$LS_CMD -A"
@@ -111,12 +129,14 @@ alias df='ShowTitle "dotfiles" && cd ~/workspace/dotfiles'
 alias mdp='ShowTitle "mac-dev-playbook" && cd ~/workspace/mac-dev-playbook'
 alias ws='ShowTitle "workspace" && cd ~/workspace'
 
-export NVM_DIR="$HOME/.nvm"
-[ -s "$(brew --prefix)/opt/nvm/nvm.sh" ] && . "$(brew --prefix)/opt/nvm/nvm.sh" # This loads nvm
-[ -s "$(brew --prefix)/opt/nvm/etc/bash_completion.d/nvm" ] && . "$(brew --prefix)/opt/nvm/etc/bash_completion.d/nvm" # This loads nvm bash_completion
+if [[ "$OSTYPE" == "darwin"* ]]; then
+  export NVM_DIR="$HOME/.nvm"
+  [ -s "$(brew --prefix)/opt/nvm/nvm.sh" ] && . "$(brew --prefix)/opt/nvm/nvm.sh" # This loads nvm
+  [ -s "$(brew --prefix)/opt/nvm/etc/bash_completion.d/nvm" ] && . "$(brew --prefix)/opt/nvm/etc/bash_completion.d/nvm" # This loads nvm bash_completion
 
-source $(brew --prefix)/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-source $(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+  source $(brew --prefix)/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+  source $(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+fi
 
 ZSH_AUTOSUGGEST_HISTORY_IGNORE="(cd *|curl *|wget *)"
 ZSH_AUTOSUGGEST_STRATEGY=(completion history)
@@ -129,10 +149,8 @@ alias gce="gh copilot explain"
 
 alias docker-nas="docker -H ssh://andrew@truenas.fitzy.foo"
 
-eval "$(rbenv init - --no-rehash zsh)"
-
-# Added by Windsurf
-export PATH="/Users/andrew/.codeium/windsurf/bin:$PATH"
+if [[ "$OSTYPE" == "darwin"* ]]; then
+  eval "$(rbenv init - --no-rehash zsh)"
+fi
 
 command -v flux >/dev/null && . <(flux completion zsh)
-export PATH="/Applications/Xcode-16.4.0-Release.Candidate.app/Contents/Developer/usr/bin:$PATH"
