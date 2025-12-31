@@ -41,6 +41,10 @@ plugins=(
   web-search
   z
   kubectl
+  zsh-autosuggestions
+  zsh-syntax-highlighting
+  fast-syntax-highlighting
+  zsh-autocomplete
 )
 
 source $ZSH/oh-my-zsh.sh
@@ -136,7 +140,7 @@ fi
 ZSH_AUTOSUGGEST_HISTORY_IGNORE="(cd *|curl *|wget *)"
 ZSH_AUTOSUGGEST_STRATEGY=(completion history)
 
-bindkey '^I' forward-word
+# bindkey '^I' forward-word
 
 alias copilot="gh copilot"
 alias gcs="gh copilot suggest --shell-out=/bin/sh"
