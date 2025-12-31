@@ -17,7 +17,9 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
   export PATH="/Applications/Visual Studio Code.app/Contents/Resources/app/bin:$PATH"
   export PATH="$HOME/Library/Application Support/JetBrains/Toolbox/scripts:$PATH"
   # Added by Windsurf
-export PATH="/Users/andrew/.codeium/windsurf/bin:$PATH"
+  export PATH="/Users/andrew/.codeium/windsurf/bin:$PATH"
+else
+  export PATH="$HOME/.local/bin:$PATH"
 fi
 
 export PATH=$HOME/workspace/dotfiles/bin:$PATH
