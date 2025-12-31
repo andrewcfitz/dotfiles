@@ -48,7 +48,7 @@ source $ZSH/oh-my-zsh.sh
 if [[ "$OSTYPE" == "darwin"* ]]; then
   source $(brew --prefix)/share/powerlevel10k/powerlevel10k.zsh-theme
 else
-  ZSH_THEME="powerlevel10k/powerlevel10k"
+  source /home/developer/.oh-my-zsh/custom/themes/powerlevel10k/powerlevel10k.zsh-theme
 fi
 
 alias reload='source ~/.zshrc'

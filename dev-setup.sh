@@ -19,8 +19,6 @@ P10K_DIR="$HOME/.oh-my-zsh/custom/themes/powerlevel10k"
 if [ ! -d "$P10K_DIR" ]; then
   echo "Installing Powerlevel10k..."
   git clone --depth=1 https://github.com/romkatv/powerlevel10k.git "$P10K_DIR"
-  # Set Powerlevel10k as the theme in .zshrc
-  sed -i 's/^ZSH_THEME=.*/ZSH_THEME="powerlevel10k\/powerlevel10k"/' ~/.zshrc
 fi
 
 # Change default shell to zsh
