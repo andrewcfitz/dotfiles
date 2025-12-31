@@ -7,15 +7,6 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
-# Detect OS and set MODE variable
-if [[ "$OSTYPE" == "darwin"* ]]; then
-  export MODE="MACOS"
-elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
-  export MODE="UBUNTU"
-else
-  export MODE="UNKNOWN"
-fi
-
 export SSH_AUTH_SOCK=~/Library/Group\ Containers/2BUA8C4S2C.com.1password/t/agent.sock
 
 if [[ "$OSTYPE" == "darwin"* ]]; then
