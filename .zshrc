@@ -47,11 +47,19 @@ plugins=(
 
 source $ZSH/oh-my-zsh.sh
 
+# Configure zsh-autocomplete before loading it
+zstyle ':autocomplete:*' widget-style menu-select
+zstyle ':autocomplete:*' fzf-completion no
+
 if [[ "$OSTYPE" == "darwin"* ]]; then
   source $(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh
   source $(brew --prefix)/share/zsh-fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh
   source $(brew --prefix)/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
   source $(brew --prefix)/share/zsh-autocomplete/zsh-autocomplete.plugin.zsh
+  
+  # Unbind arrow keys from autocomplete menu navigation
+  bindkey -M menuselect '^[[D' .backward-char
+  bindkey -M menuselect '^[[C' .forward-char
 else
   # Linux: Load plugins from oh-my-zsh custom directory
   [[ -f ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh ]] && \
@@ -63,10 +71,6 @@ else
   [[ -f ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-autocomplete/zsh-autocomplete.plugin.zsh ]] && \
     source ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-autocomplete/zsh-autocomplete.plugin.zsh
 fi
-
-# Restore arrow key behavior for cursor movement (override zsh-autocomplete)
-bindkey '^[[C' forward-char
-bindkey '^[[D' backward-char
 
 if [[ "$OSTYPE" == "darwin"* ]]; then
   source $(brew --prefix)/share/powerlevel10k/powerlevel10k.zsh-theme
