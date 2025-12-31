@@ -54,7 +54,7 @@ ln -sf $HOME/workspace/dotfiles/.p10k.zsh ~/.p10k.zsh
 # Install Claude CLI (if not already installed)
 if ! command -v claude &> /dev/null; then
   echo "Installing Claude CLI..."
-  curl -fsSL https://claude.ai/install.sh | bash -s -- --force
+  curl -fsSL https://claude.ai/install.sh | bash -s stable --force
 else
   echo "Claude CLI already installed, skipping..."
 fi
