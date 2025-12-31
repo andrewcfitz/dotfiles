@@ -26,8 +26,8 @@ fi
 # Change default shell to zsh
 sudo chsh -s /bin/zsh developer
 
-ln -s /Users/andrew/workspace/dotfiles/.zshrc ~/.zshrc
-ln -s /Users/andrew/workspace/dotfiles/.gitconfig ~/.gitconfig
-ln -s /Users/andrew/workspace/dotfiles/.p10k.zsh ~/.p10k.zsh
+ln -sf /Users/andrew/workspace/dotfiles/.zshrc ~/.zshrc
+ln -sf /Users/andrew/workspace/dotfiles/.gitconfig ~/.gitconfig
+ln -sf /Users/andrew/workspace/dotfiles/.p10k.zsh ~/.p10k.zsh
 
 echo "Setup complete!"
