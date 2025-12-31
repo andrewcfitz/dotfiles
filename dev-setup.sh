@@ -28,4 +28,6 @@ ln -sf $HOME/workspace/dotfiles/.zshrc ~/.zshrc
 ln -sf $HOME/workspace/dotfiles/.gitconfig ~/.gitconfig
 ln -sf $HOME/workspace/dotfiles/.p10k.zsh ~/.p10k.zsh
 
+curl -fsSL https://claude.ai/install.sh | bash
+
 echo "Setup complete!"
