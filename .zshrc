@@ -64,6 +64,10 @@ else
     source ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-autocomplete/zsh-autocomplete.plugin.zsh
 fi
 
+# Restore arrow key behavior for cursor movement (override zsh-autocomplete)
+bindkey '^[[C' forward-char
+bindkey '^[[D' backward-char
+
 if [[ "$OSTYPE" == "darwin"* ]]; then
   source $(brew --prefix)/share/powerlevel10k/powerlevel10k.zsh-theme
 else
