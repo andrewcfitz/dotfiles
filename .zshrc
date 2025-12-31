@@ -45,7 +45,11 @@ plugins=(
 
 source $ZSH/oh-my-zsh.sh
 
-source $(brew --prefix)/share/powerlevel10k/powerlevel10k.zsh-theme
+if [[ "$OSTYPE" == "darwin"* ]]; then
+  source $(brew --prefix)/share/powerlevel10k/powerlevel10k.zsh-theme
+else
+  ZSH_THEME="powerlevel10k/powerlevel10k"
+fi
 
 alias reload='source ~/.zshrc'
 
