@@ -6,7 +6,7 @@ set -e
 
 echo "Installing packages..."
 sudo apt-get update
-sudo apt-get install -y zsh tmux screen
+sudo apt-get install -y zsh tmux screen gpg
 
 # Install Oh My Zsh (if not already installed)
 if [ ! -d ~/.oh-my-zsh ]; then
