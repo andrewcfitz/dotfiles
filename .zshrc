@@ -176,3 +176,5 @@ command -v flux >/dev/null && . <(flux completion zsh)
 
 # 1Password service account token (mounted in development container)
 [[ -f /secrets/op/credential ]] && export OP_SERVICE_ACCOUNT_TOKEN=$(cat /secrets/op/credential)
+
+eval "$(direnv hook zsh)"
