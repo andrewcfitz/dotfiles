@@ -45,7 +45,7 @@ if [ ! -d "$ZSH_CUSTOM/plugins/zsh-autocomplete" ]; then
 fi
 
 # Change default shell to zsh
-sudo chsh -s /bin/zsh developer
+sudo chsh -s /bin/zsh "$(whoami)"
 
 ln -sf $HOME/workspace/dotfiles/.zshrc ~/.zshrc
 ln -sf $HOME/workspace/dotfiles/.gitconfig ~/.gitconfig

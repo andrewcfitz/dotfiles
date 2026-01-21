@@ -55,7 +55,7 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
   source $(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh
   source $(brew --prefix)/share/zsh-fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh
   source $(brew --prefix)/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-  source $(brew --prefix)/share/zsh-autocomplete/zsh-autocomplete.plugin.zsh
+  # source $(brew --prefix)/share/zsh-autocomplete/zsh-autocomplete.plugin.zsh
   
   # Unbind arrow keys from autocomplete menu navigation
   bindkey -M menuselect '^[[D' .backward-char
@@ -75,7 +75,7 @@ fi
 if [[ "$OSTYPE" == "darwin"* ]]; then
   source $(brew --prefix)/share/powerlevel10k/powerlevel10k.zsh-theme
 else
-  source /home/developer/.oh-my-zsh/custom/themes/powerlevel10k/powerlevel10k.zsh-theme
+  source ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k/powerlevel10k.zsh-theme
 fi
 
 alias reload='source ~/.zshrc'
