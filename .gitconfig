@@ -16,7 +16,7 @@
 	name = andrewcfitz
 	email = andrew@fitz.biz
 [core]
-  excludesfile = /Users/andrew/.gitignore
+  excludesfile = ~/.gitignore
   eof = lf
   autocrlf = input
 [filter "lfs"]
