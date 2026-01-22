@@ -28,6 +28,7 @@ bindkey "^[[1;3C" forward-word
 bindkey "^[[1;3D" backward-word
 
 export ZSH="$HOME/.oh-my-zsh"
+export ZSH_COMPDUMP="$HOME/.zcompdump"
 
 export LANG=en_US.UTF-8
 
