@@ -9,7 +9,7 @@
   whitespace = strip
   whitespace = nowarn
 [credential]
-  helper = cache
+	helper = store
 [push]
   default = simple
 [user]
