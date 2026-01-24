@@ -186,15 +186,21 @@ fi
 command -v flux >/dev/null && . <(flux completion zsh)
 
 devbox() {
-  local session_name="${1:-$(date +%s)}"
+  local session_name="$1"
 
-  # Set iTerm2 tab title to session name
-  printf '\033]1;%s\007' "$session_name"
+  if [[ -n "$session_name" ]]; then
+    # Set iTerm2 tab title to session name
+    printf '\033]1;%s\007' "$session_name"
 
-  if ssh -p 2222 coder@ingress.roanoke.fitzy.foo "tmux has-session -t '$session_name'" 2>/dev/null; then
-    mosh --ssh="ssh -p 2222" coder@ingress.roanoke.fitzy.foo -- tmux attach -t "$session_name"
+    if ssh -p 2222 coder@ingress.roanoke.fitzy.foo "tmux has-session -t '$session_name'" 2>/dev/null; then
+      mosh --ssh="ssh -p 2222" coder@ingress.roanoke.fitzy.foo -- tmux attach -t "$session_name"
+    else
+      mosh --ssh="ssh -p 2222" coder@ingress.roanoke.fitzy.foo -- sh -c "mkdir -p ~/workspace/$session_name && cd ~/workspace/$session_name && tmux new -s $session_name \; split-window -v"
+    fi
   else
-    mosh --ssh="ssh -p 2222" coder@ingress.roanoke.fitzy.foo -- sh -c "mkdir -p ~/workspace/$session_name && cd ~/workspace/$session_name && tmux new -s $session_name \; split-window -v"
+    # No session name - just go to ~/workspace
+    printf '\033]1;devbox\007'
+    mosh --ssh="ssh -p 2222" coder@ingress.roanoke.fitzy.foo -- sh -c "cd ~/workspace && tmux new \; split-window -v"
   fi
 }
 
