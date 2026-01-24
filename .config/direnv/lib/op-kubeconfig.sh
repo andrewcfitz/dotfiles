@@ -10,10 +10,10 @@ use_op_kubeconfig() {
   
   if [ ! -f "$cache_file" ] || [ ! -s "$cache_file" ]; then
     echo "Fetching kubeconfig from 1Password..."
-    op document get "$document" \
+    op item get "$document" \
       --vault "$vault" \
-      --out-file "$cache_file" \
-      --force || {
+      --fields notesPlain \
+      > "$cache_file" || {
       echo "Failed to fetch kubeconfig from 1Password. Make sure you're signed in with: op signin"
       return 1
     }
