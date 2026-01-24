@@ -177,6 +177,11 @@ fi
 
 command -v flux >/dev/null && . <(flux completion zsh)
 
+devbox() {
+  local session_name="${1:-$(date +%s)}"
+  mosh --ssh="ssh -p 2222" coder@ingress.roanoke.fitzy.foo -- tmux new -A -s "$session_name"
+}
+
 # 1Password service account token (mounted in development container)
 [[ -f /secrets/op/credential ]] && export OP_SERVICE_ACCOUNT_TOKEN=$(cat /secrets/op/credential)
 
