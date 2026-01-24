@@ -1228,7 +1228,7 @@
 			<key>Bound Hosts</key>
 			<array>
 				<string>&amp;tmux</string>
-				<string>&amp;mosh</string>
+				<string>&amp;mosh-client</string>
 			</array>
 			<key>Dynamic Profile Parent Name</key>
 			<string>Default</string>
