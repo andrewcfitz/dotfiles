@@ -1234,8 +1234,12 @@
 			<string>/bin/bash --login</string>
 			<key>Custom Command</key>
 			<string>No</string>
+			<key>Custom Directory</key>
+			<string>Yes</string>
 			<key>Default Bookmark</key>
 			<string>No</string>
+			<key>Disable Window Resizing</key>
+			<true/>
 			<key>Dynamic Profile Parent Name</key>
 			<string>Default</string>
 			<key>Guid</key>
@@ -1259,6 +1263,8 @@
 					<string>0x0b</string>
 				</dict>
 			</dict>
+			<key>Mouse Reporting</key>
+			<true/>
 			<key>Name</key>
 			<string>tmux</string>
 			<key>Non Ascii Font</key>
@@ -1271,12 +1277,20 @@
 			<integer>0</integer>
 			<key>Tags</key>
 			<array/>
+			<key>Terminal Type</key>
+			<string>xterm-256color</string>
+			<key>Title Components</key>
+			<integer>1</integer>
 			<key>Unlimited Scrollback</key>
 			<true/>
 			<key>Use Non-ASCII Font</key>
 			<false/>
 			<key>Vertical Spacing</key>
 			<real>1</real>
+			<key>Visual Bell</key>
+			<true/>
+			<key>Working Directory</key>
+			<string>/Users/andrew/workspace</string>
 		</dict>
 	</array>
 	<key>OpenFileInNewWindows</key>
