@@ -1240,6 +1240,8 @@
 			<string>Default</string>
 			<key>Guid</key>
 			<string>TMUX-PROFILE-GUID-1234</string>
+			<key>Horizontal Spacing</key>
+			<real>1</real>
 			<key>Jobs to Ignore</key>
 			<array>
 				<string>rlogin</string>
@@ -1259,10 +1261,20 @@
 			</dict>
 			<key>Name</key>
 			<string>tmux</string>
+			<key>Non Ascii Font</key>
+			<string>Monaco 12</string>
+			<key>Normal Font</key>
+			<string>HackNF-Regular 12</string>
 			<key>Prompt Before Closing 2</key>
 			<false/>
+			<key>Scrollback Lines</key>
+			<integer>1000</integer>
 			<key>Tags</key>
 			<array/>
+			<key>Use Non-ASCII Font</key>
+			<false/>
+			<key>Vertical Spacing</key>
+			<real>1</real>
 		</dict>
 	</array>
 	<key>OpenFileInNewWindows</key>
