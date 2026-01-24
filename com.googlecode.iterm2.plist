@@ -1230,10 +1230,23 @@
 				<string>&amp;tmux</string>
 				<string>&amp;mosh-client</string>
 			</array>
+			<key>Command</key>
+			<string>/bin/bash --login</string>
+			<key>Custom Command</key>
+			<string>No</string>
+			<key>Default Bookmark</key>
+			<string>No</string>
 			<key>Dynamic Profile Parent Name</key>
 			<string>Default</string>
 			<key>Guid</key>
 			<string>TMUX-PROFILE-GUID-1234</string>
+			<key>Jobs to Ignore</key>
+			<array>
+				<string>rlogin</string>
+				<string>ssh</string>
+				<string>slogin</string>
+				<string>telnet</string>
+			</array>
 			<key>Keyboard Map</key>
 			<dict>
 				<key>0x6b-0x100000-0x28</key>
@@ -1246,6 +1259,10 @@
 			</dict>
 			<key>Name</key>
 			<string>tmux</string>
+			<key>Prompt Before Closing 2</key>
+			<false/>
+			<key>Tags</key>
+			<array/>
 		</dict>
 	</array>
 	<key>OpenFileInNewWindows</key>
