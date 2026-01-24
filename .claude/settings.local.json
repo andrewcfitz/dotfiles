@@ -3,7 +3,11 @@
     "allow": [
       "WebSearch",
       "Bash(ls:*)",
-      "Bash(cat:*)"
+      "Bash(cat:*)",
+      "Bash(echo:*)",
+      "Bash(tmux show-options:*)",
+      "Bash(tmux info:*)",
+      "Bash(infocmp:*)"
     ]
   }
 }
