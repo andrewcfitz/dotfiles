@@ -36,6 +36,13 @@
 	<true/>
 	<key>GlobalKeyMap</key>
 	<dict>
+		<key>0x6b-0x100000-0x28</key>
+		<dict>
+			<key>Action</key>
+			<integer>11</integer>
+			<key>Text</key>
+			<string>0x0b</string>
+		</dict>
 		<key>0xd-0x20000-0x24</key>
 		<dict>
 			<key>Action</key>
@@ -48,13 +55,6 @@
 			<string>\n</string>
 			<key>Version</key>
 			<integer>1</integer>
-		</dict>
-		<key>0x6b-0x100000-0x28</key>
-		<dict>
-			<key>Action</key>
-			<integer>11</integer>
-			<key>Text</key>
-			<string>0x0b</string>
 		</dict>
 	</dict>
 	<key>HapticFeedbackForEsc</key>
@@ -1056,13 +1056,6 @@
 					<key>Text</key>
 					<string>d</string>
 				</dict>
-				<key>0x6b-0x100000-0x28</key>
-				<dict>
-					<key>Action</key>
-					<integer>11</integer>
-					<key>Text</key>
-					<string>0x0b</string>
-				</dict>
 			</dict>
 			<key>Link Color</key>
 			<dict>
@@ -1282,6 +1275,8 @@
 	<false/>
 	<key>SplitPaneDimmingAmount</key>
 	<real>0.23560270579268294</real>
+	<key>TmuxSyncClipboard</key>
+	<true/>
 	<key>ToolbeltTools</key>
 	<array>
 		<string>Codecierge</string>
