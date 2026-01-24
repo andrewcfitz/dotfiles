@@ -1056,6 +1056,13 @@
 					<key>Text</key>
 					<string>d</string>
 				</dict>
+				<key>0x6b-0x100000-0x28</key>
+				<dict>
+					<key>Action</key>
+					<integer>11</integer>
+					<key>Text</key>
+					<string>0x0b</string>
+				</dict>
 			</dict>
 			<key>Link Color</key>
 			<dict>
