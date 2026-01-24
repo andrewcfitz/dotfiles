@@ -175,6 +175,8 @@ alias copilot="gh copilot"
 alias gcs="gh copilot suggest --shell-out=/bin/sh"
 alias gce="gh copilot explain"
 
+alias claude="claude --allow-dangerously-skip-permissions"
+
 alias docker-nas="docker -H ssh://andrew@truenas.fitzy.foo"
 
 if [[ "$OSTYPE" == "darwin"* ]]; then
@@ -185,7 +187,12 @@ command -v flux >/dev/null && . <(flux completion zsh)
 
 devbox() {
   local session_name="${1:-$(date +%s)}"
-  mosh --ssh="ssh -p 2222" coder@ingress.roanoke.fitzy.foo -- tmux new -A -s "$session_name"
+  
+  if ssh -p 2222 coder@ingress.roanoke.fitzy.foo "tmux has-session -t '$session_name'" 2>/dev/null; then
+    mosh --ssh="ssh -p 2222" coder@ingress.roanoke.fitzy.foo -- tmux attach -t "$session_name"
+  else
+    mosh --ssh="ssh -p 2222" coder@ingress.roanoke.fitzy.foo -- sh -c "mkdir -p ~/workspace/$session_name && cd ~/workspace/$session_name && tmux new -s $session_name \; split-window -v"
+  fi
 }
 
 # 1Password service account token (mounted in development container)
