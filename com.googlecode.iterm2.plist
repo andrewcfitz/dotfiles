@@ -1236,6 +1236,8 @@
 			<string>No</string>
 			<key>Custom Directory</key>
 			<string>Yes</string>
+			<key>Custom Window Title</key>
+			<string>\(commandLineMatches("tmux.*-t\s+(\S+)"))</string>
 			<key>Default Bookmark</key>
 			<string>No</string>
 			<key>Disable Window Resizing</key>
@@ -1279,8 +1281,6 @@
 			<array/>
 			<key>Terminal Type</key>
 			<string>xterm-256color</string>
-			<key>Custom Window Title</key>
-			<string>\(commandLineMatches("tmux.*-t\s+(\S+)"))</string>
 			<key>Title Components</key>
 			<integer>2</integer>
 			<key>Unlimited Scrollback</key>
