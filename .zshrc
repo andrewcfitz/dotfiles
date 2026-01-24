@@ -20,6 +20,8 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
   export PATH="/Users/andrew/.codeium/windsurf/bin:$PATH"
 else
   export PATH="$HOME/.local/bin:$PATH"
+  export PATH="$HOME/.dotnet:$PATH"
+  export PATH="$HOME/.pulumi/bin:$PATH"
 fi
 
 export PATH=$HOME/workspace/dotfiles/bin:$PATH
