@@ -187,7 +187,10 @@ command -v flux >/dev/null && . <(flux completion zsh)
 
 devbox() {
   local session_name="${1:-$(date +%s)}"
-  
+
+  # Set iTerm2 tab title to session name
+  printf '\033]1;%s\007' "$session_name"
+
   if ssh -p 2222 coder@ingress.roanoke.fitzy.foo "tmux has-session -t '$session_name'" 2>/dev/null; then
     mosh --ssh="ssh -p 2222" coder@ingress.roanoke.fitzy.foo -- tmux attach -t "$session_name"
   else
