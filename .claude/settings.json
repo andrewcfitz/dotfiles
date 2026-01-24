@@ -1,1 +1,41 @@
-{ }
+{
+  "permissions": {
+    "allow": [
+      "Bash(git add:*)",
+      "Bash(git push:*)",
+      "Bash(kubectl get:*)",
+      "Bash(kubectl describe:*)",
+      "Bash(kubectl exec:*)",
+      "Bash(git commit:*)",
+      "WebFetch(domain:github.com)",
+      "Bash(dotnet build)",
+      "Bash(pulumi up:*)",
+      "Bash(./run.sh:*)",
+      "Bash(op item:*)",
+      "Bash(op vault list:*)",
+      "Bash(kubectl delete:*)",
+      "Bash(pulumi stack:*)",
+      "Bash(pulumi cancel:*)",
+      "Bash(curl:*)",
+      "Read(//Users/andrew/workspace/**)",
+      "Bash(kubectl logs:*)",
+      "Bash(kubectl patch:*)",
+      "Bash(kubectl rollout restart:*)",
+      "Bash(nslookup:*)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "Bash(op signin:*)",
+      "Bash(kubectl:*)",
+      "Bash(git clone:*)",
+      "Bash(dotnet build:*)",
+      "Bash(rclone obscure:*)",
+      "mcp__playwright__browser_navigate",
+      "mcp__playwright__browser_fill_form",
+      "mcp__playwright__browser_click",
+      "mcp__playwright__browser_wait_for",
+      "mcp__playwright__browser_snapshot"
+    ],
+    "deny": [],
+    "ask": [],
+    "defaultMode": "plan"
+  }
+}
