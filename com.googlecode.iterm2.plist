@@ -1268,9 +1268,11 @@
 			<key>Prompt Before Closing 2</key>
 			<false/>
 			<key>Scrollback Lines</key>
-			<integer>1000</integer>
+			<integer>0</integer>
 			<key>Tags</key>
 			<array/>
+			<key>Unlimited Scrollback</key>
+			<true/>
 			<key>Use Non-ASCII Font</key>
 			<false/>
 			<key>Vertical Spacing</key>
