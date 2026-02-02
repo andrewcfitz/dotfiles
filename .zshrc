@@ -186,19 +186,23 @@ fi
 command -v flux >/dev/null && . <(flux completion zsh)
 
 devbox() {
-  local session_name="$1"
+  local repo_name="$1"
+  local worktree_name="${2:-main}"
 
-  if [[ -n "$session_name" ]]; then
-    # Set iTerm2 tab title to session name
+  if [[ -n "$repo_name" ]]; then
+    local session_name="${repo_name}-${worktree_name}"
+    local workspace_dir="~/workspace/${repo_name}/${worktree_name}"
+
+    # Set iTerm2 tab title
     printf '\033]1;%s\007' "$session_name"
 
     if ssh coder-k3s "tmux has-session -t '$session_name'" 2>/dev/null; then
       mosh --ssh="ssh" coder-k3s -- tmux attach -t "$session_name"
     else
-      mosh --ssh="ssh" coder-k3s -- sh -c "mkdir -p ~/workspace/$session_name && cd ~/workspace/$session_name && tmux new -s $session_name \; split-window -v"
+      mosh --ssh="ssh" coder-k3s -- sh -c "mkdir -p $workspace_dir && cd $workspace_dir && tmux new -s '$session_name' \; split-window -v"
     fi
   else
-    # No session name - just go to ~/workspace
+    # No repo name - just go to ~/workspace
     printf '\033]1;devbox\007'
     mosh --ssh="ssh" coder-k3s -- sh -c "cd ~/workspace && tmux new \; split-window -v"
   fi
