@@ -141,9 +141,9 @@ else
   source ~/.antidote/antidote.zsh
 fi
 
-antidote load
-
 autoload -Uz compinit && compinit
+
+antidote load
 
 bindkey '^[[A' history-substring-search-up
 bindkey '^[[B' history-substring-search-down
