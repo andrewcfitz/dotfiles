@@ -34,64 +34,6 @@ fi
 
 export PATH=$HOME/workspace/dotfiles/bin:$PATH
 
-# bindkey "^[[1;3C" forward-word
-# bindkey "^[[1;3D" backward-word
-
-export ZSH="$HOME/.oh-my-zsh"
-export ZSH_COMPDUMP="$HOME/.zcompdump"
-
-# export LANG=en_US.UTF-8
-
-# POWERLEVEL10K_MODE='nerdfont-complete'
-
-# plugins=(
-#   git
-#   jsontools
-#   macos
-#   pod
-#   sudo
-#   textmate
-#   web-search
-#   z
-#   kubectl
-# )
-
-# source $ZSH/oh-my-zsh.sh
-
-# # Configure zsh-autocomplete before loading it
-# zstyle ':autocomplete:*' widget-style menu-select
-# zstyle ':autocomplete:*' fzf-completion no
-
-# if [[ "$OSTYPE" == "darwin"* ]]; then
-#   source $(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh
-#   source $(brew --prefix)/share/zsh-fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh
-#   source $(brew --prefix)/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-#   # source $(brew --prefix)/share/zsh-autocomplete/zsh-autocomplete.plugin.zsh
-  
-#   # Unbind arrow keys from autocomplete menu navigation
-#   bindkey -M menuselect '^[[D' .backward-char
-#   bindkey -M menuselect '^[[C' .forward-char
-# else
-#   # Linux: Load plugins from oh-my-zsh custom directory
-#   [[ -f ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh ]] && \
-#     source ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
-#   [[ -f ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh ]] && \
-#     source ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh
-#   [[ -f ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]] && \
-#     source ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-#   [[ -f ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-autocomplete/zsh-autocomplete.plugin.zsh ]] && \
-#     source ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-autocomplete/zsh-autocomplete.plugin.zsh
-# fi
-
-# if [[ "$OSTYPE" == "darwin"* ]]; then
-#   source $(brew --prefix)/share/powerlevel10k/powerlevel10k.zsh-theme
-# else
-#   source ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k/powerlevel10k.zsh-theme
-# fi
-
-# # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-# [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-
 # Load aliases
 [[ -f ~/.aliases ]] && source ~/.aliases
 
@@ -105,25 +47,8 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
   eval "$(rbenv init - --no-rehash zsh)"
 fi
 
-devbox() {
-  local repo_name="$1"
-
-  if [[ -n "$repo_name" ]]; then
-    local session_name="${repo_name}"
-    local workspace_dir="~/workspace/${repo_name}"
-
-    printf '\033]1;%s\007' "$session_name"
-
-    if ssh coder "tmux has-session -t '$session_name'" 2>/dev/null; then
-      et coder:2022 -c "tmux attach -t '$session_name'"
-    else
-      et coder:2022 -c "mkdir -p $workspace_dir && cd $workspace_dir && tmux new -s '$session_name' \; split-window -v"
-    fi
-  else
-    printf '\033]1;devbox\007'
-    et coder:2022 -c "cd ~/workspace && tmux new \; split-window -v"
-  fi
-}
+# Load devbox functions
+[[ -f ~/.devbox.zsh ]] && source ~/.devbox.zsh
 
 # 1Password service account token (mounted in development container)
 [[ -f /secrets/op/credential ]] && export OP_SERVICE_ACCOUNT_TOKEN=$(cat /secrets/op/credential)
