@@ -1,0 +1,62 @@
+alias reload='source ~/.zshrc'
+
+if [[ "$OSTYPE" == "darwin"* ]]; then
+  export LS_CMD="gls --color=auto"
+else
+  export LS_CMD="ls --color=auto"
+fi
+alias ls="$LS_CMD"
+alias ll="$LS_CMD -alh"
+alias la="$LS_CMD -A"
+alias l="$LS_CMD -lahrtc"
+
+alias gs="git status"
+alias gst="git status"
+alias gadd="git add -A && git status -sb"
+alias update_submodules="git pull --recurse-submodules && git submodule update"
+alias gp="git push origin HEAD -u"
+alias gb="git co -b"
+alias gd="git diff"
+alias gk="gitk 2> /dev/null"
+alias gcm="git commit -m"
+alias grh_git_reset_hard="git reset --hard"
+alias pull="git pull"
+alias gpr_git_pull_rebase="git pull --rebase"
+alias push="git push"
+
+# Syntax highlighting for less (-R for RAW ^ colors)
+alias less='less -R'
+
+alias path='echo $PATH'
+
+# Interactive delete
+alias rm='rm -i'
+
+# Verbosely show progress for move and copy
+alias cp='cp -v'
+alias mv='mv -v'
+
+alias tf="terraform"
+
+cleandd() {
+  rm -rf ~/Library/Developer/Xcode/DerivedData
+  echo "Removed all derived data."
+}
+
+alias cleardd=cleandd
+
+# Generate UUID and copy to clipboard
+alias uuid="uuidgen | tr -d '\n' | tr '[:upper:]' '[:lower:]'  | pbcopy && pbpaste && echo"
+alias flushdns="sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder"
+
+alias stop='./scripts/stop.sh'
+alias start='./scripts/start.sh'
+alias build='./scripts/build.sh'
+alias nuke='./scripts/nuke.sh'
+alias preload='./scripts/preload-data.sh'
+
+alias copilot="gh copilot"
+alias gcs="gh copilot suggest --shell-out=/bin/sh"
+alias gce="gh copilot explain"
+
+alias claude="claude --allow-dangerously-skip-permissions"
