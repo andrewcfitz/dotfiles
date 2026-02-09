@@ -105,8 +105,6 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
   eval "$(rbenv init - --no-rehash zsh)"
 fi
 
-command -v flux >/dev/null && . <(flux completion zsh)
-
 devbox() {
   local repo_name="$1"
 
@@ -141,9 +139,9 @@ else
   source ~/.antidote/antidote.zsh
 fi
 
-autoload -Uz compinit && compinit
-
 antidote load
+
+command -v flux >/dev/null && . <(flux completion zsh)
 
 bindkey '^[[A' history-substring-search-up
 bindkey '^[[B' history-substring-search-down
