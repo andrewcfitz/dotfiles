@@ -60,3 +60,4 @@ alias gcs="gh copilot suggest --shell-out=/bin/sh"
 alias gce="gh copilot explain"
 
 alias claude="claude --allow-dangerously-skip-permissions"
+alias k="kubectl"

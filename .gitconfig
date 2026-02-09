@@ -8,8 +8,6 @@
 [apply]
   whitespace = strip
   whitespace = nowarn
-[credential]
-	helper = store
 [push]
   default = simple
 [user]
@@ -29,6 +27,8 @@
 [alias]
   co = checkout
 [credential "https://github.com"]
-	helper = !/usr/bin/env gh auth git-credential
+	helper = \\!/home/coder/.local/bin/gh auth git-credential
 [credential "https://gist.github.com"]
-	helper = !/usr/bin/env gh auth git-credential
+	helper = \\!/home/coder/.local/bin/gh auth git-credential
+[credential]
+	helper = store
