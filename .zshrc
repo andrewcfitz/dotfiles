@@ -149,5 +149,4 @@ bindkey '^[[A' history-substring-search-up
 bindkey '^[[B' history-substring-search-down
 
 eval "$(starship init zsh)"
-
 eval "$(direnv hook zsh)"
