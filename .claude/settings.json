@@ -37,5 +37,6 @@
     "deny": [],
     "ask": [],
     "defaultMode": "plan"
-  }
+  },
+  "skipDangerousModePermissionPrompt": true
 }
