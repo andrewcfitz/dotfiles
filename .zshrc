@@ -19,8 +19,6 @@ else
   export PATH="$HOME/.local/bin:$PATH"
   export PATH="$HOME/.dotnet:$PATH"
   export PATH="$HOME/.pulumi/bin:$PATH"
-
-  export DOCKER_HOST=tcp://localhost:2375
 fi
 
 export PATH=$HOME/workspace/dotfiles/bin:$PATH
