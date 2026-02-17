@@ -57,8 +57,8 @@ antidote load
 
 command -v flux >/dev/null && . <(flux completion zsh)
 
-bindkey '^[[A' history-substring-search-up
-bindkey '^[[B' history-substring-search-down
+bindkey '^[[A' history-search-backward
+bindkey '^[[B' history-search-forward
 
 eval "$(starship init zsh)"
 eval "$(direnv hook zsh)"
