@@ -68,8 +68,11 @@ antidote load
 
 command -v flux >/dev/null && . <(flux completion zsh)
 
-bindkey '^[[A' history-search-backward
-bindkey '^[[B' history-search-forward
+# Up/Down arrow: search history for commands starting with the current input
+bindkey '^[[A' history-search-backward   # Up arrow (normal mode, e.g. raw terminal)
+bindkey '^[[B' history-search-forward    # Down arrow (normal mode)
+bindkey '^[OA' history-search-backward   # Up arrow (application mode, e.g. inside tmux)
+bindkey '^[OB' history-search-forward    # Down arrow (application mode)
 
 eval "$(starship init zsh)"
 eval "$(direnv hook zsh)"
