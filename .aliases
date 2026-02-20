@@ -54,6 +54,8 @@ alias start='./scripts/start.sh'
 alias build='./scripts/build.sh'
 alias nuke='./scripts/nuke.sh'
 alias preload='./scripts/preload-data.sh'
+alias reset='./scripts/reset.sh'
+alias load-backup='./scripts/load-latest-backup.sh'
 
 alias copilot="gh copilot"
 alias gcs="gh copilot suggest --shell-out=/bin/sh"
