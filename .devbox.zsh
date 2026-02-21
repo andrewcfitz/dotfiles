@@ -251,3 +251,39 @@ devbox() {
 
   __devbox_connect "${repo_name}-${worktree_name}" "~/workspace/${repo_name}/${worktree_name}"
 }
+
+_devbox() {
+  local -a opts repos worktrees
+  local repo_name=""
+
+  # Extract repo_name from existing args (skip flags)
+  for word in "${words[@]:1}"; do
+    [[ "$word" != --* && "$word" != "$words[CURRENT]" ]] && { repo_name="$word"; break; }
+  done
+
+  # Count positional args before cursor
+  local pos=0
+  for word in "${words[@]:1:$((CURRENT-2))}"; do
+    [[ "$word" != --* ]] && ((pos++))
+  done
+
+  # Flags - always available
+  opts=('--cleanup[Clean up stale worktrees]' '--force[Force cleanup, removing uncommitted changes]')
+
+  if [[ "$words[CURRENT]" == -* ]]; then
+    _describe 'option' opts
+    return
+  fi
+
+  if (( pos == 0 )); then
+    # Complete repo names
+    repos=(${(f)"$(ssh dev-vm "ls -d ~/workspace/*/.bare 2>/dev/null | xargs -I{} dirname {} | xargs -I{} basename {}" 2>/dev/null)"})
+    _describe 'repository' repos
+  elif (( pos == 1 )) && [[ -n "$repo_name" ]]; then
+    # Complete worktree names
+    worktrees=(${(f)"$(__devbox_list_worktrees "$repo_name")"})
+    _describe 'worktree' worktrees
+  fi
+}
+
+compdef _devbox devbox
