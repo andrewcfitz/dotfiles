@@ -67,6 +67,11 @@ fi
 antidote load
 
 command -v flux >/dev/null && . <(flux completion zsh)
+command -v kubectl >/dev/null && . <(kubectl completion zsh)
+command -v docker >/dev/null && . <(docker completion zsh)
+command -v gh >/dev/null && . <(gh completion -s zsh)
+command -v pulumi >/dev/null && . <(pulumi gen-completion zsh)
+command -v op >/dev/null && . <(op completion zsh)
 
 # Up/Down arrow: search history for commands starting with the current input
 bindkey '^[[A' history-search-backward   # Up arrow (normal mode, e.g. raw terminal)
