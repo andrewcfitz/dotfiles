@@ -36,9 +36,6 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
   eval "$(rbenv init - --no-rehash zsh)"
 fi
 
-# Load devbox functions
-[[ -f ~/.devbox.zsh ]] && source ~/.devbox.zsh
-
 # 1Password service account token (mounted in development container)
 [[ -f /secrets/op/credential ]] && export OP_SERVICE_ACCOUNT_TOKEN=$(cat /secrets/op/credential)
 
@@ -65,6 +62,9 @@ else
 fi
 
 antidote load
+
+# Load devbox functions (after antidote so compdef is available)
+[[ -f ~/.devbox.zsh ]] && source ~/.devbox.zsh
 
 command -v flux >/dev/null && . <(flux completion zsh)
 command -v kubectl >/dev/null && . <(kubectl completion zsh)
