@@ -268,7 +268,7 @@ _devbox() {
   done
 
   # Flags - always available
-  opts=('--cleanup[Clean up stale worktrees]' '--force[Force cleanup, removing uncommitted changes]')
+  opts=('--cleanup:Clean up stale worktrees' '--force:Force cleanup, removing uncommitted changes')
 
   if [[ "$words[CURRENT]" == -* ]]; then
     _describe 'option' opts
