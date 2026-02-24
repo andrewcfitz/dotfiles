@@ -1,16 +1,20 @@
 __devbox_list_worktrees() {
   local repo_name="$1"
+  local prefix
+  prefix=$(ssh dev-vm "echo ~/workspace/${repo_name}/" 2>/dev/null)
   ssh dev-vm "git -C ~/workspace/${repo_name}/.bare worktree list" 2>/dev/null \
     | awk '{print $1}' \
     | while read -r wt_path; do
-        local name="${wt_path:t}"
-        [[ "$name" != ".bare" ]] && echo "$name"
+        [[ "$wt_path" == */".bare" ]] && continue
+        echo "${wt_path#$prefix}"
       done
 }
 
 __devbox_cleanup_worktrees() {
   local repo_name="$1"
   local force="$2"
+  local debug="$3"
+  local fuck_it="$4"
   local bare="~/workspace/${repo_name}/.bare"
 
   # Verify bare repo exists
@@ -47,34 +51,50 @@ __devbox_cleanup_worktrees() {
     [[ "$wt" == "$default_branch" ]] && continue
 
     local wt_path="~/workspace/${repo_name}/${wt}"
+    local session_name="${repo_name}-${wt}"
     local skip_reasons=()
 
-    if [[ "$force" != "true" ]]; then
+    # Check for active tmux connection (idle > 1h is considered stale)
+    local active_clients=$(ssh dev-vm "
+      now=\$(date +%s)
+      tmux list-clients -t '${session_name}' -F '#{client_activity}' 2>/dev/null \
+        | while read -r ts; do
+            [ \$(( now - ts )) -lt 3600 ] && echo active
+          done
+    " </dev/null 2>/dev/null)
+    [[ "$debug" == "true" ]] && echo "  [debug] ${wt}: active_clients=${active_clients:-none}"
+    if [[ "$fuck_it" != "true" && -n "$active_clients" ]]; then
+      skip_reasons+=("active session")
+    fi
+
+    if [[ "$force" != "true" && "$fuck_it" != "true" ]]; then
       # Check dirty working tree
-      local status_output
-      status_output=$(ssh dev-vm "git -C ${wt_path} status --porcelain" 2>/dev/null)
+      local status_output=$(ssh dev-vm "git -C ${wt_path} status --porcelain" </dev/null 2>/dev/null)
+      [[ "$debug" == "true" && -n "$status_output" ]] && echo "  [debug] ${wt}: dirty files:\n${status_output}"
       if [[ -n "$status_output" ]]; then
         skip_reasons+=("uncommitted changes")
       fi
 
-      # Check for unpushed commits
-      local unpushed
-      unpushed=$(ssh dev-vm "git -C ${bare} log ${wt} --not --remotes=origin --oneline" 2>/dev/null)
+      # Check for unpushed commits (git cherry handles squash merges)
+      local unpushed=$(ssh dev-vm "git -C ${bare} cherry origin/${default_branch} ${wt} 2>/dev/null | grep '^+'" </dev/null 2>/dev/null)
+      if [[ "$debug" == "true" && -n "$unpushed" ]]; then
+        local unpushed_log=$(ssh dev-vm "git -C ${bare} cherry origin/${default_branch} ${wt} 2>/dev/null | grep '^+' | cut -d' ' -f2 | xargs -I{} git -C ${bare} log -1 --format='%h %s' {}" </dev/null 2>/dev/null)
+        echo "  [debug] ${wt}: unpushed:\n${unpushed_log}"
+      fi
       if [[ -n "$unpushed" ]]; then
         skip_reasons+=("unpushed commits")
       fi
     fi
 
     if [[ ${#skip_reasons[@]} -gt 0 ]]; then
-      local reason="${(j:, :)skip_reasons}"
-      printf "  %-8s %s (%s)\n" "SKIP" "$wt" "$reason"
+      printf "  %-8s %s (%s)\n" "SKIP" "$wt" "${(j:, :)skip_reasons}"
       ((skipped++))
     else
-      ssh dev-vm "tmux kill-session -t '${repo_name}-${wt}'" 2>/dev/null
+      ssh dev-vm "tmux kill-session -t '${session_name}'" </dev/null 2>/dev/null
       local force_flag=""
-      [[ "$force" == "true" ]] && force_flag="--force"
-      ssh dev-vm "cd ${bare} && git worktree remove ${force_flag} ../${wt}" 2>/dev/null
-      ssh dev-vm "git -C ${bare} branch -D ${wt}" 2>/dev/null
+      [[ "$force" == "true" || "$fuck_it" == "true" ]] && force_flag="--force"
+      ssh dev-vm "cd ${bare} && git worktree remove ${force_flag} ../${wt}" </dev/null 2>/dev/null
+      ssh dev-vm "git -C ${bare} branch -D ${wt}" </dev/null &>/dev/null
       printf "  %-8s %s\n" "REMOVED" "$wt"
       ((removed++))
     fi
@@ -124,14 +144,14 @@ __devbox_create_worktree() {
     ssh dev-vm "cd ${bare} && git worktree add ../${worktree_name} ${worktree_name}" >&2
     ssh dev-vm "git -C ${wt_dir} branch --set-upstream-to=origin/${worktree_name} ${worktree_name}" >&2
     echo "Pulling latest changes..." >&2
-    ssh dev-vm "git -C ${wt_dir} pull" >&2
+    ssh dev-vm "git -C ${wt_dir} pull --rebase" >&2
   elif ssh dev-vm "git -C ${bare} show-ref --verify --quiet refs/heads/${worktree_name}" 2>/dev/null; then
     echo "Creating worktree from local branch: ${worktree_name}" >&2
     ssh dev-vm "cd ${bare} && git worktree add ../${worktree_name} ${worktree_name}" >&2
     if ssh dev-vm "git -C ${bare} show-ref --verify --quiet refs/remotes/origin/${worktree_name}" 2>/dev/null; then
       ssh dev-vm "git -C ${wt_dir} branch --set-upstream-to=origin/${worktree_name} ${worktree_name}" >&2
       echo "Pulling latest changes..." >&2
-      ssh dev-vm "git -C ${wt_dir} pull" >&2
+      ssh dev-vm "git -C ${wt_dir} pull --rebase" >&2
     fi
   else
     local default_branch
@@ -141,7 +161,7 @@ __devbox_create_worktree() {
     ssh dev-vm "cd ${bare} && git worktree add -b ${worktree_name} ../${worktree_name} ${default_branch}" >&2
     ssh dev-vm "git -C ${wt_dir} branch --set-upstream-to=origin/${default_branch} ${worktree_name}" >&2
     echo "Pulling latest changes..." >&2
-    ssh dev-vm "git -C ${wt_dir} pull" >&2
+    ssh dev-vm "git -C ${wt_dir} pull --rebase" >&2
   fi
 }
 
@@ -198,11 +218,15 @@ devbox() {
   local worktree_name=""
   local cleanup=false
   local force=false
+  local fuck_it=false
+  local debug=false
 
   for arg in "$@"; do
     case "$arg" in
       --cleanup) cleanup=true ;;
       --force)   force=true ;;
+      --fuck-it) fuck_it=true ;;
+      --debug)   debug=true ;;
       *)
         if [[ -z "$repo_name" ]]; then
           repo_name="$arg"
@@ -218,13 +242,23 @@ devbox() {
     return 1
   fi
 
+  if [[ "$fuck_it" == "true" && "$cleanup" != "true" ]]; then
+    echo "Error: --fuck-it can only be used with --cleanup." >&2
+    return 1
+  fi
+
+  if [[ "$debug" == "true" && "$cleanup" != "true" ]]; then
+    echo "Error: --debug can only be used with --cleanup." >&2
+    return 1
+  fi
+
   if [[ "$cleanup" == "true" && -z "$repo_name" ]]; then
     echo "Error: --cleanup requires a repo name." >&2
     return 1
   fi
 
   if [[ "$cleanup" == "true" ]]; then
-    __devbox_cleanup_worktrees "$repo_name" "$force"
+    __devbox_cleanup_worktrees "$repo_name" "$force" "$debug" "$fuck_it"
     return
   fi
 
@@ -268,7 +302,7 @@ _devbox() {
   done
 
   # Flags - always available
-  opts=('--cleanup:Clean up stale worktrees' '--force:Force cleanup, removing uncommitted changes')
+  opts=('--cleanup:Clean up stale worktrees' '--force:Force cleanup, ignore uncommitted/unpushed' '--fuck-it:Nuclear cleanup, even kill active sessions' '--debug:Show debug output during cleanup')
 
   if [[ "$words[CURRENT]" == -* ]]; then
     _describe 'option' opts
