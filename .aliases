@@ -61,5 +61,5 @@ alias copilot="gh copilot"
 alias gcs="gh copilot suggest --shell-out=/bin/sh"
 alias gce="gh copilot explain"
 
-alias claude="claude --allow-dangerously-skip-permissions"
+alias claude="claude --allow-dangerously-skip-permissions --permission-mode bypassPermissions"
 alias k="kubectl"
