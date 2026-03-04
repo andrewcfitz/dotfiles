@@ -1,14 +1,21 @@
 alias reload='source ~/.zshrc'
 
-if [[ "$OSTYPE" == "darwin"* ]]; then
-  export LS_CMD="gls --color=auto"
+if command -v eza &>/dev/null; then
+  alias ls="eza --color=auto"
+  alias ll="eza -alh --git --color=auto"
+  alias la="eza -A --color=auto"
+  alias l="eza -alh --sort=changed --reverse --color=auto"
 else
-  export LS_CMD="ls --color=auto"
+  if [[ "$OSTYPE" == "darwin"* ]]; then
+    export LS_CMD="gls --color=auto"
+  else
+    export LS_CMD="ls --color=auto"
+  fi
+  alias ls="$LS_CMD"
+  alias ll="$LS_CMD -alh"
+  alias la="$LS_CMD -A"
+  alias l="$LS_CMD -lahrtc"
 fi
-alias ls="$LS_CMD"
-alias ll="$LS_CMD -alh"
-alias la="$LS_CMD -A"
-alias l="$LS_CMD -lahrtc"
 
 alias gs="git status"
 alias gst="git status"
