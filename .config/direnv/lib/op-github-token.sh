@@ -9,6 +9,12 @@ use_op_github_token() {
       log_error "Failed to read NuGet token from 1Password"
       return 1
     fi
+
+    export GITHUB_TOKEN=$(gh auth token 2>/dev/null)
+    if [ -z "$GITHUB_TOKEN" ]; then
+      log_error "Failed to read GITHUB_TOKEN from gh CLI"
+      return 1
+    fi
   else
     log_error "op CLI not found — cannot load NUGET_TOKEN"
     return 1
