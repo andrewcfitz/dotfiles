@@ -1,8 +1,10 @@
+DEVBOX_HOST="dev-vm.fitzy.foo"
+
 __devbox_list_worktrees() {
   local repo_name="$1"
   local prefix
-  prefix=$(ssh dev-vm "echo ~/workspace/${repo_name}/" 2>/dev/null)
-  ssh dev-vm "git -C ~/workspace/${repo_name}/.bare worktree list" 2>/dev/null \
+  prefix=$(ssh $DEVBOX_HOST "echo ~/workspace/${repo_name}/" 2>/dev/null)
+  ssh $DEVBOX_HOST "git -C ~/workspace/${repo_name}/.bare worktree list" 2>/dev/null \
     | awk '{print $1}' \
     | while read -r wt_path; do
         [[ "$wt_path" == */".bare" ]] && continue
@@ -18,19 +20,19 @@ __devbox_cleanup_worktrees() {
   local bare="~/workspace/${repo_name}/.bare"
 
   # Verify bare repo exists
-  if ! ssh dev-vm "test -d ${bare}" 2>/dev/null; then
+  if ! ssh $DEVBOX_HOST "test -d ${bare}" 2>/dev/null; then
     echo "Error: bare repo not found for '${repo_name}'." >&2
     return 1
   fi
 
   # Detect default branch
   local default_branch
-  default_branch=$(ssh dev-vm "git -C ${bare} symbolic-ref refs/remotes/origin/HEAD 2>/dev/null | sed 's|refs/remotes/origin/||'")
+  default_branch=$(ssh $DEVBOX_HOST "git -C ${bare} symbolic-ref refs/remotes/origin/HEAD 2>/dev/null | sed 's|refs/remotes/origin/||'")
   [[ -z "$default_branch" ]] && default_branch="main"
 
   # Fetch latest with prune
   echo "Fetching latest from origin..."
-  ssh dev-vm "git -C ${bare} fetch origin --prune" 2>/dev/null
+  ssh $DEVBOX_HOST "git -C ${bare} fetch origin --prune" 2>/dev/null
 
   echo "Cleaning up worktrees for ${repo_name} (default branch: ${default_branch})"
   echo ""
@@ -55,7 +57,7 @@ __devbox_cleanup_worktrees() {
     local skip_reasons=()
 
     # Check for active tmux connection (idle > 1h is considered stale)
-    local active_clients=$(ssh dev-vm "
+    local active_clients=$(ssh $DEVBOX_HOST "
       now=\$(date +%s)
       tmux list-clients -t '${session_name}' -F '#{client_activity}' 2>/dev/null \
         | while read -r ts; do
@@ -69,16 +71,16 @@ __devbox_cleanup_worktrees() {
 
     if [[ "$force" != "true" && "$fuck_it" != "true" ]]; then
       # Check dirty working tree
-      local status_output=$(ssh dev-vm "git -C ${wt_path} status --porcelain" </dev/null 2>/dev/null)
+      local status_output=$(ssh $DEVBOX_HOST "git -C ${wt_path} status --porcelain" </dev/null 2>/dev/null)
       [[ "$debug" == "true" && -n "$status_output" ]] && echo "  [debug] ${wt}: dirty files:\n${status_output}"
       if [[ -n "$status_output" ]]; then
         skip_reasons+=("uncommitted changes")
       fi
 
       # Check for unpushed commits (git cherry handles squash merges)
-      local unpushed=$(ssh dev-vm "git -C ${bare} cherry origin/${default_branch} ${wt} 2>/dev/null | grep '^+'" </dev/null 2>/dev/null)
+      local unpushed=$(ssh $DEVBOX_HOST "git -C ${bare} cherry origin/${default_branch} ${wt} 2>/dev/null | grep '^+'" </dev/null 2>/dev/null)
       if [[ "$debug" == "true" && -n "$unpushed" ]]; then
-        local unpushed_log=$(ssh dev-vm "git -C ${bare} cherry origin/${default_branch} ${wt} 2>/dev/null | grep '^+' | cut -d' ' -f2 | xargs -I{} git -C ${bare} log -1 --format='%h %s' {}" </dev/null 2>/dev/null)
+        local unpushed_log=$(ssh $DEVBOX_HOST "git -C ${bare} cherry origin/${default_branch} ${wt} 2>/dev/null | grep '^+' | cut -d' ' -f2 | xargs -I{} git -C ${bare} log -1 --format='%h %s' {}" </dev/null 2>/dev/null)
         echo "  [debug] ${wt}: unpushed:\n${unpushed_log}"
       fi
       if [[ -n "$unpushed" ]]; then
@@ -90,11 +92,11 @@ __devbox_cleanup_worktrees() {
       printf "  %-8s %s (%s)\n" "SKIP" "$wt" "${(j:, :)skip_reasons}"
       ((skipped++))
     else
-      ssh dev-vm "tmux kill-session -t '${session_name}'" </dev/null 2>/dev/null
+      ssh $DEVBOX_HOST "tmux kill-session -t '${session_name}'" </dev/null 2>/dev/null
       local force_flag=""
       [[ "$force" == "true" || "$fuck_it" == "true" ]] && force_flag="--force"
-      ssh dev-vm "cd ${bare} && git worktree remove ${force_flag} ../${wt}" </dev/null 2>/dev/null
-      ssh dev-vm "git -C ${bare} branch -D ${wt}" </dev/null &>/dev/null
+      ssh $DEVBOX_HOST "cd ${bare} && git worktree remove ${force_flag} ../${wt}" </dev/null 2>/dev/null
+      ssh $DEVBOX_HOST "git -C ${bare} branch -D ${wt}" </dev/null &>/dev/null
       printf "  %-8s %s\n" "REMOVED" "$wt"
       ((removed++))
     fi
@@ -116,18 +118,18 @@ __devbox_init_bare_repo() {
   fi
 
   echo "Cloning bare repo..." >&2
-  ssh dev-vm "git clone --bare '${git_url}' ~/workspace/${repo_name}/.bare" || return 1
+  ssh $DEVBOX_HOST "git clone --bare '${git_url}' ~/workspace/${repo_name}/.bare" || return 1
 
   echo "Configuring fetch refspec..." >&2
-  ssh dev-vm "git -C ~/workspace/${repo_name}/.bare config remote.origin.fetch '+refs/heads/*:refs/remotes/origin/*'"
-  ssh dev-vm "git -C ~/workspace/${repo_name}/.bare fetch origin" >&2
+  ssh $DEVBOX_HOST "git -C ~/workspace/${repo_name}/.bare config remote.origin.fetch '+refs/heads/*:refs/remotes/origin/*'"
+  ssh $DEVBOX_HOST "git -C ~/workspace/${repo_name}/.bare fetch origin" >&2
 
   local default_branch
-  default_branch=$(ssh dev-vm "git -C ~/workspace/${repo_name}/.bare symbolic-ref refs/remotes/origin/HEAD 2>/dev/null | sed 's|refs/remotes/origin/||'")
+  default_branch=$(ssh $DEVBOX_HOST "git -C ~/workspace/${repo_name}/.bare symbolic-ref refs/remotes/origin/HEAD 2>/dev/null | sed 's|refs/remotes/origin/||'")
   [[ -z "$default_branch" ]] && default_branch="main"
 
   echo "Creating initial worktree: ${default_branch}" >&2
-  ssh dev-vm "cd ~/workspace/${repo_name}/.bare && git worktree add ../${default_branch} ${default_branch}" >&2
+  ssh $DEVBOX_HOST "cd ~/workspace/${repo_name}/.bare && git worktree add ../${default_branch} ${default_branch}" >&2
 
   echo "$default_branch"
 }
@@ -139,29 +141,29 @@ __devbox_create_worktree() {
 
   local wt_dir="~/workspace/${repo_name}/${worktree_name}"
 
-  if ssh dev-vm "git -C ${bare} show-ref --verify --quiet refs/remotes/origin/${worktree_name}" 2>/dev/null; then
+  if ssh $DEVBOX_HOST "git -C ${bare} show-ref --verify --quiet refs/remotes/origin/${worktree_name}" 2>/dev/null; then
     echo "Creating worktree from remote branch: ${worktree_name}" >&2
-    ssh dev-vm "cd ${bare} && git worktree add ../${worktree_name} ${worktree_name}" >&2
-    ssh dev-vm "git -C ${wt_dir} branch --set-upstream-to=origin/${worktree_name} ${worktree_name}" >&2
+    ssh $DEVBOX_HOST "cd ${bare} && git worktree add ../${worktree_name} ${worktree_name}" >&2
+    ssh $DEVBOX_HOST "git -C ${wt_dir} branch --set-upstream-to=origin/${worktree_name} ${worktree_name}" >&2
     echo "Pulling latest changes..." >&2
-    ssh dev-vm "git -C ${wt_dir} pull --rebase" >&2
-  elif ssh dev-vm "git -C ${bare} show-ref --verify --quiet refs/heads/${worktree_name}" 2>/dev/null; then
+    ssh $DEVBOX_HOST "git -C ${wt_dir} pull --rebase" >&2
+  elif ssh $DEVBOX_HOST "git -C ${bare} show-ref --verify --quiet refs/heads/${worktree_name}" 2>/dev/null; then
     echo "Creating worktree from local branch: ${worktree_name}" >&2
-    ssh dev-vm "cd ${bare} && git worktree add ../${worktree_name} ${worktree_name}" >&2
-    if ssh dev-vm "git -C ${bare} show-ref --verify --quiet refs/remotes/origin/${worktree_name}" 2>/dev/null; then
-      ssh dev-vm "git -C ${wt_dir} branch --set-upstream-to=origin/${worktree_name} ${worktree_name}" >&2
+    ssh $DEVBOX_HOST "cd ${bare} && git worktree add ../${worktree_name} ${worktree_name}" >&2
+    if ssh $DEVBOX_HOST "git -C ${bare} show-ref --verify --quiet refs/remotes/origin/${worktree_name}" 2>/dev/null; then
+      ssh $DEVBOX_HOST "git -C ${wt_dir} branch --set-upstream-to=origin/${worktree_name} ${worktree_name}" >&2
       echo "Pulling latest changes..." >&2
-      ssh dev-vm "git -C ${wt_dir} pull --rebase" >&2
+      ssh $DEVBOX_HOST "git -C ${wt_dir} pull --rebase" >&2
     fi
   else
     local default_branch
-    default_branch=$(ssh dev-vm "git -C ${bare} symbolic-ref refs/remotes/origin/HEAD 2>/dev/null | sed 's|refs/remotes/origin/||'")
+    default_branch=$(ssh $DEVBOX_HOST "git -C ${bare} symbolic-ref refs/remotes/origin/HEAD 2>/dev/null | sed 's|refs/remotes/origin/||'")
     [[ -z "$default_branch" ]] && default_branch="main"
     echo "Creating new branch '${worktree_name}' from '${default_branch}'" >&2
-    ssh dev-vm "cd ${bare} && git worktree add -b ${worktree_name} ../${worktree_name} ${default_branch}" >&2
-    ssh dev-vm "git -C ${wt_dir} branch --set-upstream-to=origin/${default_branch} ${worktree_name}" >&2
+    ssh $DEVBOX_HOST "cd ${bare} && git worktree add -b ${worktree_name} ../${worktree_name} ${default_branch}" >&2
+    ssh $DEVBOX_HOST "git -C ${wt_dir} branch --set-upstream-to=origin/${default_branch} ${worktree_name}" >&2
     echo "Pulling latest changes..." >&2
-    ssh dev-vm "git -C ${wt_dir} pull --rebase" >&2
+    ssh $DEVBOX_HOST "git -C ${wt_dir} pull --rebase" >&2
   fi
 }
 
@@ -203,13 +205,22 @@ __devbox_pick_worktree() {
 __devbox_connect() {
   local session_name="$1"
   local workspace_dir="$2"
+  local use_ssh="$3"
 
   printf '\033]1;%s\007' "$session_name"
 
-  if ssh dev-vm "tmux has-session -t '$session_name'" 2>/dev/null; then
-    et dev-vm:2022 -c "tmux attach -t '$session_name'"
+  if [[ "$use_ssh" == "true" ]]; then
+    if ssh $DEVBOX_HOST "tmux has-session -t '$session_name'" 2>/dev/null; then
+      ssh -t $DEVBOX_HOST "tmux attach -t '$session_name'"
+    else
+      ssh -t $DEVBOX_HOST "cd $workspace_dir && tmux new -s '$session_name' \; split-window -v"
+    fi
   else
-    et dev-vm:2022 -c "cd $workspace_dir && tmux new -s '$session_name' \; split-window -v"
+    if ssh $DEVBOX_HOST "tmux has-session -t '$session_name'" 2>/dev/null; then
+      et $DEVBOX_HOST:2022 -c "tmux attach -t '$session_name'"
+    else
+      et $DEVBOX_HOST:2022 -c "cd $workspace_dir && tmux new -s '$session_name' \; split-window -v"
+    fi
   fi
 }
 
@@ -220,6 +231,7 @@ devbox() {
   local force=false
   local fuck_it=false
   local debug=false
+  local use_ssh=false
 
   for arg in "$@"; do
     case "$arg" in
@@ -227,6 +239,7 @@ devbox() {
       --force)   force=true ;;
       --fuck-it) fuck_it=true ;;
       --debug)   debug=true ;;
+      --ssh)     use_ssh=true ;;
       *)
         if [[ -z "$repo_name" ]]; then
           repo_name="$arg"
@@ -264,12 +277,16 @@ devbox() {
 
   if [[ -z "$repo_name" ]]; then
     printf '\033]1;devbox\007'
-    et dev-vm:2022 -c "cd ~/workspace && tmux new \; split-window -v"
+    if [[ "$use_ssh" == "true" ]]; then
+      ssh -t $DEVBOX_HOST "cd ~/workspace && tmux new \; split-window -v"
+    else
+      et $DEVBOX_HOST:2022 -c "cd ~/workspace && tmux new \; split-window -v"
+    fi
     return
   fi
 
   # Ensure bare repo exists
-  if ! ssh dev-vm "test -d ~/workspace/${repo_name}/.bare" 2>/dev/null; then
+  if ! ssh $DEVBOX_HOST "test -d ~/workspace/${repo_name}/.bare" 2>/dev/null; then
     worktree_name=$(__devbox_init_bare_repo "$repo_name") || return 1
   fi
 
@@ -279,11 +296,11 @@ devbox() {
   fi
 
   # Ensure worktree directory exists
-  if ! ssh dev-vm "test -d ~/workspace/${repo_name}/${worktree_name}" 2>/dev/null; then
+  if ! ssh $DEVBOX_HOST "test -d ~/workspace/${repo_name}/${worktree_name}" 2>/dev/null; then
     __devbox_create_worktree "$repo_name" "$worktree_name" || return 1
   fi
 
-  __devbox_connect "${repo_name}-${worktree_name}" "~/workspace/${repo_name}/${worktree_name}"
+  __devbox_connect "${repo_name}-${worktree_name}" "~/workspace/${repo_name}/${worktree_name}" "$use_ssh"
 }
 
 _devbox() {
@@ -302,7 +319,7 @@ _devbox() {
   done
 
   # Flags - always available
-  opts=('--cleanup:Clean up stale worktrees' '--force:Force cleanup, ignore uncommitted/unpushed' '--fuck-it:Nuclear cleanup, even kill active sessions' '--debug:Show debug output during cleanup')
+  opts=('--cleanup:Clean up stale worktrees' '--force:Force cleanup, ignore uncommitted/unpushed' '--fuck-it:Nuclear cleanup, even kill active sessions' '--debug:Show debug output during cleanup' '--ssh:Use SSH instead of EternalTerminal')
 
   if [[ "$words[CURRENT]" == -* ]]; then
     _describe 'option' opts
@@ -311,7 +328,7 @@ _devbox() {
 
   if (( pos == 0 )); then
     # Complete repo names
-    repos=(${(f)"$(ssh dev-vm "ls -d ~/workspace/*/.bare 2>/dev/null | xargs -I{} dirname {} | xargs -I{} basename {}" 2>/dev/null)"})
+    repos=(${(f)"$(ssh $DEVBOX_HOST "ls -d ~/workspace/*/.bare 2>/dev/null | xargs -I{} dirname {} | xargs -I{} basename {}" 2>/dev/null)"})
     _describe 'repository' repos
   elif (( pos == 1 )) && [[ -n "$repo_name" ]]; then
     # Complete worktree names

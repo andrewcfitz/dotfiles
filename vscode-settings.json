@@ -8,5 +8,8 @@
   "security.workspace.trust.untrustedFiles": "open",
   "terminal.integrated.env.osx": {
     "Q_NEW_SESSION": "1"
-  }
+  },
+  "claudeCode.preferredLocation": "panel",
+  "claudeCode.useTerminal": true,
+  "workbench.colorTheme": "Dracula Theme"
 }
